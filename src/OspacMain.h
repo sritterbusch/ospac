@@ -1,0 +1,211 @@
+/**
+ * @file		OspacMain.h
+ * @author  	Sebastian Ritterbusch <ospac@ritterbusch.de>
+ * @version 	1.0
+ * @date		5.2.2016
+ * @copyright	MIT License (see LICENSE file)
+ * @brief		Command line interface
+ */
+
+#ifndef OSPACMAIN_H_
+#define OSPACMAIN_H_
+
+#include <string>
+#include <vector>
+
+#include "Channel.h"
+
+/**
+ * @brief Main program class for dealing with command line options
+ *
+ * This class represents the command line interface of ospac,
+ * and defines standard values for its settings.
+ */
+class OspacMain
+{
+protected:
+	/**
+	 * Vector of all command line arguments
+	 */
+	std::vector<std::string> arg;
+
+	/**
+	 * List of all valid command line tokens
+	 */
+	static std::string options[];
+
+	/**
+	 * Tests the given parameter if it is an options by checking with options
+	 * list
+	 * @param s parameter string to check
+	 * @return true if an option was detected
+	 */
+	bool isOption(std::string &s);
+
+	/**
+	 * Downmix mode for voice channels.
+	 */
+	enum MixMode { SPATIAL, STEREO, MONO, MULTI , MaxMixMode};
+
+	/**
+	 * Argument mode what kind of acoustic data is to be processed.
+	 */
+	enum ArgMode { VOICE, MIX, RAW, MaxArgMode};
+
+	/**
+	 * Transition mode between acoustic data segments
+	 */
+	enum TransitionMode { NONE, OVERLAP, FADE, MaxTransitionMode};
+
+	/**
+	 * Downmix mode for current acoustic data segment
+	 */
+	MixMode			mixMode;
+
+	/**
+	 * Kind of acoustic data in this acoustic data segment
+	 */
+	ArgMode 		argMode;
+
+	/**
+	 * Transition mode from last acoustic data segment
+	 */
+	TransitionMode 	transitionMode;
+
+	/**
+	 * Transition time from last acoustic data segment
+	 */
+	float			transitionSeconds;
+
+	/**
+	 * Transition mode to next acoustic data segment
+	 */
+	TransitionMode 	nextTransitionMode;
+
+	/**
+	 * Transition time to next acoustic data segment
+	 */
+	float			nextTransitionSeconds;
+
+	/**
+	 * Current factor for maximizer
+	 */
+	float   maximizer;
+
+	/**
+	 * Should current segment be normalized
+	 */
+	bool    normalizer;
+
+	/**
+	 * Should the current segment be levelled
+	 */
+	bool    leveler;
+
+	/**
+	 * Leveling target energy
+	 */
+	float   levelTarget;
+
+	/**
+	 * Should the current segment be cross-gated
+	 */
+	bool    xGate;
+
+	/**
+	 * Should the current segment be filtered by the experimental cross-filter
+	 */
+	bool    xFilter;
+
+	/**
+	 * Should the current segment appy the skip-filter
+	 */
+	bool    skip;
+
+	/**
+	 * Silence detection for skipping filter
+	 */
+	float   skipSilence;
+
+	/**
+	 * Should voice equalizer run over the channels?
+	 */
+	bool	voiceEq;
+
+	/**
+	 * Set all variables to their standard setting dependent on data mode
+	 */
+	void setStandard();
+
+	/**
+	 * Render last segment and current segment to the target segment
+	 * according to all settings regarding current segment and transition
+	 * @param work		previous audio data segment
+	 * @param operand	current audio data segment
+	 * @param target	target audio data segment
+	 */
+	void render(Channels & work,Channels & operand,Channels & target);
+
+	/**
+	 * Standard maximizer factor
+	 */
+	float	stdMaximizer[MaxArgMode];
+
+	/**
+	 * Standard normalizer flag
+	 */
+	bool	stdNormalizer[MaxArgMode];
+
+	/**
+	 * Standard leveler flag
+	 */
+	bool	stdLeveler[MaxArgMode];
+
+	/**
+	 * Standard leveler target
+	 */
+	float	stdLevelTarget[MaxArgMode];
+
+	/**
+	 * Standard cross gate flag
+	 */
+	bool	stdXGate[MaxArgMode];
+
+	/**
+	 * Standard cross filter flat
+	 */
+	bool	stdXFilter[MaxArgMode];
+
+	/**
+	 * Standard skip filter flag
+	 */
+	bool	stdSkip[MaxArgMode];
+
+	/**
+	 * Standard silence level for skip filter
+	 */
+	float   stdSkipSilence[MaxArgMode];
+
+	/**
+	 * Standard voice eq setting
+	 */
+	bool    stdVoiceEq[MaxArgMode];
+
+public:
+	/**
+	 * Set up data and prepare everything for the run method.
+	 * @param aArg vector of command line options.
+	 */
+	OspacMain(std::vector<std::string>);
+
+	virtual ~OspacMain();
+
+	/**
+	 * Run the application and do all actions that were requested
+	 * my the option given.
+	 * @return 0 in case of success, 1 in case of error.
+	 */
+	int run(void);
+};
+
+#endif /* OSPACMAIN_H_ */
