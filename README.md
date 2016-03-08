@@ -31,7 +31,9 @@ may build and install ospac in this way:
 
 ## API Reference
 
-See the doxygen docs for a detailed API reference.
+See the doxygen docs 
+https://github.com/sritterbusch/ospac/raw/master/ospac-internal.pdf
+for a detailed API reference.
 
 ## Tests
 
