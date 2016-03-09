@@ -44,8 +44,6 @@ Channel	Frequency::convolution(const Channel &a,const Channel &kernel)
 	return target;
 }
 
-
-// From: http://www.musicdsp.org/showArchiveComment.php?ArchiveID=266
 Channels Frequency::split(const Channel & a,float f,float width)
 {
 	if(width>f)
