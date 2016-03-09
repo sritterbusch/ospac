@@ -383,7 +383,7 @@ int OspacMain::run(void)
 				std::cout << "  --factor [n]    Multiply channels by factor [n] with sigmoid limiter (1.25)" << std::endl;
 				std::cout << "  --no-factor     Disable channel multiplier" << std::endl;
 				std::cout << "  --eqvoice       Attenuate voice frequency bands" << std::endl;
-				std::cout << "  --no-eq-voice   Do not attenuate frequency bands" << std::endl;
+				std::cout << "  --no-eqvoice   Do not attenuate frequency bands" << std::endl;
 				std::cout << "  --normalize     Normalize final mix" << std::endl;
 				std::cout << "  --no-normalize  Disable final normalization" << std::endl;
 				std::cout << std::endl;
