@@ -3,6 +3,40 @@
 Ospac will take a multi-channel recording of an audio podcast conversation 
 and master this to  a high-quality mix-down with support for intro and outro. 
 
+## Features
+
+Beside other features, ospac includes a robust leveler, two solutions to
+avoid crosstalk and soft silence skipping.
+
+### Leveler
+
+Ospac provides an energy based leveler. The following plot shows the
+original on top and the levelled outcome on the bottom:
+
+![Example for the leveling algorithm: Original top, leveling bottom](https://github.com/sritterbusch/ospac/raw/master/images/leveler-result.png)
+
+### Crosstalk Filter
+
+This waveform shows a crosstalk from the first channel in to the second
+channel, and some original content in the second half of the second channel:
+
+![Example for crosstalk](https://github.com/sritterbusch/ospac/raw/master/images/crosstalk-example.png)
+
+The included crosstalk gate is a very robust algorithm that results in the
+following:
+
+![Result of crosstalk gate](https://github.com/sritterbusch/ospac/raw/master/images/xgate-result.png)
+
+A new experimental crosstalk filter tries to improve the result:
+
+![Result of crosstalk filter](https://github.com/sritterbusch/ospac/raw/master/images/xfilter-result.png)
+
+### Soft silence skipping
+
+When enabled, ospac may reduce silence above 0.5s to shorter pauses:
+
+![Result of soft silence skipping](https://github.com/sritterbusch/ospac/raw/master/images/skip-result.png)
+
 ## Examples
 
 Mix 2 mono voice recordings with crosstalk filter, leveling and normalization:
