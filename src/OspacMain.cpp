@@ -641,7 +641,7 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 		LOG(logDEBUG) << "CrosstalkFilter" << std::endl;
 		//CrosstalkFilter ctFilter(work,82,0.2,1.5,5.0);
 		//CrosstalkFilter ctFilter(work,20,1.0,0.5,3.0);
-		CrosstalkFilter ctFilter(work,5,0.66,0.5,3.0);
+		CrosstalkFilter ctFilter(work,3,0.66,0.5,3.0);
 		ctFilter.analyze();
 		//ctFilter.save("analysis.wav");
 		ctFilter.mute();
