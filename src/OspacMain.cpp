@@ -695,6 +695,18 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 			mix.mix(work);
 			work=mix.getTarget();
 		}
+		{
+			if(operand.size()>1)
+			{
+				LOG(logINFO) << "Late --mono option detected. "
+						     << "Fixing previous mixing. "
+							 << "Please use --mono at the very beginning!"
+							 << std::endl;
+				MonoMix mix;
+				mix.mix(operand);
+				operand=mix.getTarget();
+			}
+		}
 		break;
 	case MULTI:
 	default:
