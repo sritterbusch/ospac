@@ -57,11 +57,14 @@ for the Modellansatz podcast, http://modellansatz.de/ .
 
 ## Installation
 
-Check that you have libsndfile and a c++-compiler on your system. Then, you
-may build and install ospac in this way:
+Check that you have libsndfile and a c++-compiler on your system. 
+Then, you may build and install ospac in this way:
 
 	$ make ospac && sudo make install
 
+On MacOS you can install libsndfile using homebrew simply by:
+
+	$ brew install libsndfile
 
 ## API Reference
 
