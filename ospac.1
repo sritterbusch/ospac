@@ -81,8 +81,13 @@ Disable crosstalk filter for current input section
 .SH "ADAPTIVE SILENCE SKIP OPTIONS"
 .IP --skip          
 Soft skip silent passages over 0.5s length
-.IP --skip-level    
+.IP "--skip-level [n]"    
 Fraction of maximum level considered silence (0.01)
+.IP "--skip-order [n]"
+Order of time of detected silence that is to be skipped.
+A level of 0 only skips the 0.5s,
+a level 0.5 skips about the square root of the silence,
+a level of 1 skips all of the silence (default: 0.75).
 .IP --no-skip       
 Do not skip any content
 
@@ -119,6 +124,29 @@ Do not attenuate frequency bands
 Normalize final mix
 .IP --no-normalize  
 Disable final normalization
+.IP "--bandpass [low] [high] [transition]"
+Apply a bandpass filter to the current audio segment, starting from
+.I [low]
+Hertz up to 
+.I [high]
+Hertz. The 
+.I [transition]
+specifies the quality of the filter in Hertz of transition.
+
+.SH "INPUT AUDIO FILES"
+.IP "[wave file]"
+Load the file 
+.I [wave file]
+and regard each channel as an individual input.
+.IP "--ascii [sample rate] [text file]"
+Load the ascii file
+.I [text file]
+which is assumed to have a sample rate of
+.I [sample rate]
+Hertz. The values can be integer or float values separated by
+white space. The input is rescaled to [-32000,32000] and comments
+starting with '#' are discarded until the next end of line.
+
 .SH EXAMPLES
 Mix 2 mono voice recordings with crosstalk filter, leveling and normalization:
 .PP
