@@ -23,6 +23,7 @@
 #include "Skip.h"
 #include "Equalizer.h"
 #include "Plot.h"
+#include "Frequency.h"
 #include <stdlib.h>
 
 
@@ -308,6 +309,10 @@ void OspacMain::setStandard()
 
 	nextTransitionMode=NONE;
 	nextTransitionSeconds=0;
+
+	bandpassLow=bandpassHigh=bandpassTransition=0;
+
+	skipOrder=0.75;
 }
 
 OspacMain::~OspacMain()
@@ -316,14 +321,16 @@ OspacMain::~OspacMain()
 
 std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "voice","mix","raw",
+							  "ascii",
 							  "fade","overlap",
 							  "factor", "no-factor",
 							  "leveler","no-leveler","target",
 							  "normalize","no-normalize",
-							  "skip","no-skip","skip-level",
+							  "skip","no-skip","skip-level","skip-order",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
+							  "bandpass",
 							  "output",
 							  "help","verbosity","plot"};
 
@@ -374,6 +381,7 @@ int OspacMain::run(void)
 				std::cout << " Adaptive silence skip:" << std::endl;
 				std::cout << "  --skip          Soft skip silent passages over 0.5s length" << std::endl;
 				std::cout << "  --skip-level    Fraction of maximum level considered silence (0.01)" << std::endl;
+				std::cout << "  --skip-order    Order of reduction (0-1, default: 0.75)" << std::endl;
 				std::cout << "  --no-skip       Do not skip any content" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Leveling, equalizer and normalization:" << std::endl;
@@ -383,9 +391,13 @@ int OspacMain::run(void)
 				std::cout << "  --factor [n]    Multiply channels by factor [n] with sigmoid limiter (1.25)" << std::endl;
 				std::cout << "  --no-factor     Disable channel multiplier" << std::endl;
 				std::cout << "  --eqvoice       Attenuate voice frequency bands" << std::endl;
-				std::cout << "  --no-eqvoice   Do not attenuate frequency bands" << std::endl;
+				std::cout << "  --no-eqvoice    Do not attenuate frequency bands" << std::endl;
 				std::cout << "  --normalize     Normalize final mix" << std::endl;
 				std::cout << "  --no-normalize  Disable final normalization" << std::endl;
+				std::cout << "  --bandpass [l] [h] [t] Bandpass from l to h Hertz, sharpness t Hertz" << std::endl;
+				std::cout << " Import audio:" << std::endl;
+				std::cout << "  [file]          Load wave file" << std::endl;
+				std::cout << "  --ascii [s] [file] Load ascii wave file with sample rate s" << std::endl;
 				std::cout << std::endl;
 				std::cout << "Examples:" << std::endl;
 				std::cout << " Mix 2 mono voice recordings with crosstalk filter, leveling and normalization:" << std::endl;
@@ -574,6 +586,15 @@ int OspacMain::run(void)
 					skipSilence=atof(arg[i].c_str());
 				}
 			} else
+			if(arg[i]=="skip-order")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					skipOrder=atof(arg[i].c_str());
+				}
+			} else
 			if(arg[i]=="xgate")
 			{
 				xGate=true;
@@ -598,6 +619,30 @@ int OspacMain::run(void)
 			{
 				voiceEq=false;
 			} else
+			if(arg[i]=="bandpass")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					bandpassLow=atof(arg[i].c_str());
+					bandpassHigh=44100;
+					bandpassTransition=1000;
+					if(bandpassTransition>bandpassLow/2)
+						bandpassTransition=bandpassLow/2;
+					if(i+1<arg.size())
+					{
+						i++;
+						bandpassHigh=atof(arg[i].c_str());
+						if(i+1<arg.size())
+						{
+							i++;
+							bandpassTransition=atof(arg[i].c_str());
+						}
+
+					}
+
+				}
+			} else
 			if(arg[i]=="output")
 			{
 				Channels temp;
@@ -610,6 +655,21 @@ int OspacMain::run(void)
 
 					Wave::save(arg[i],temp);
 				}
+			} else
+			if(arg[i]=="ascii")
+			{
+				int samplerate=44100;
+				if(i+1<arg.size())
+				{
+					i++;
+					samplerate=atoi(arg[i].c_str());
+					if(i+1<arg.size())
+					{
+						i++;
+						Wave::loadAscii(arg[i],samplerate,work);
+					}
+				}
+
 			} else
 				LOG(logERROR) << "command line option " << arg[i] << " was not recognized.";
 		} else
@@ -635,6 +695,17 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	if(voiceEq)
 	{
 		work=Equalizer::voiceEnhance(work);
+	}
+	if(bandpassTransition!=0)
+	{
+		std::vector<float> freqs(2);
+		freqs[0]=bandpassLow;
+		freqs[1]=bandpassHigh;
+		for(unsigned c=0;c<work.size();c++)
+		{
+			Channels bands=Frequency::split(work[c],freqs,bandpassTransition,true);
+			work[c]=bands[1];
+		}
 	}
 	if(xFilter)
 	{
@@ -666,8 +737,9 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	if(skip)
 	{
 		LOG(logDEBUG) << "Skip with parameter "<< skipSilence << std::endl;
-		Skip::silence(work,skipSilence);
+		Skip::silence(work,skipSilence,0.5,0.05,skipOrder);
 	}
+
 	switch(mixMode)
 	{
 	case SPATIAL:

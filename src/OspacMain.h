@@ -128,9 +128,30 @@ protected:
 	float   skipSilence;
 
 	/**
+	 * Skip order (1 for all, 0.5 for sqrt(time) skip)
+	 */
+	float   skipOrder;
+
+	/**
 	 * Should voice equalizer run over the channels?
 	 */
 	bool	voiceEq;
+
+	/**
+	 * Bandpass low limit in Hertz
+	 */
+	float	bandpassLow;
+
+	/**
+	 * Bandpass high limit in Hertz
+	 */
+	float	bandpassHigh;
+
+	/**
+	 * Bandpass filter transition in Hertz
+	 */
+	float	bandpassTransition;
+
 
 	/**
 	 * Set all variables to their standard setting dependent on data mode
