@@ -44,7 +44,21 @@ Channel	Frequency::convolution(const Channel &a,const Channel &kernel)
 	return target;
 }
 
-Channels Frequency::split(const Channel & a,float f,float width)
+unsigned Frequency::windowSize(const Channel & a,float f,float width)
+{
+	if(width>f)
+		width=f;
+
+	f=f/a.samplerate();
+
+	float BW=width/a.samplerate();
+	int    N=4/BW;
+	if(N==0)
+		N=1;
+	return N;
+}
+
+Channels Frequency::split(const Channel & a,float f,float width,bool fade)
 {
 	if(width>f)
 			width=f;
@@ -52,14 +66,9 @@ Channels Frequency::split(const Channel & a,float f,float width)
 			      << " width "<< width << "Hz" << std::endl;
 	// http://www.dspguide.com/ch16/2.htm
 
+	unsigned N=windowSize(a,f,width);
 
 	f=f/a.samplerate();
-
-	float BW=width/a.samplerate();
-	int    N=4/BW;
-
-	if(N==0)
-		N=1;
 
 	LOG(logDEBUG) << "Convolution window size " << N << std::endl;
 
@@ -75,15 +84,41 @@ Channels Frequency::split(const Channel & a,float f,float width)
 	for(unsigned i=0;i<N;i++)
 		kernel[i]/=sum;
 
-
 	Channels target(2);
 	target[0]=convolution(a,kernel);
 	target[1]=a;
+
+	if(fade)
+	{
+		for(unsigned i=0;i<N*2 && i<target[0].size();i++)
+		{
+			double f=(double(i)-N)/N;
+			if(f<0)
+				f=0;
+
+			target[0][i]*=f;
+			target[0][target[0].size()-1-i]*=f;
+		}
+	}
 
 	for(unsigned x=0;x<a.size();x++)
 		target[1][x]-=target[0][x];
 
 	Channel temp=convolution(target[1],kernel);
+
+	if(fade)
+	{
+		for(unsigned i=0;i<N*2 && i<temp.size();i++)
+		{
+			double f=(double(i)-N)/N;
+			if(f<0)
+				f=0;
+
+			temp[i]*=f;
+			temp[temp.size()-1-i]*=f;
+		}
+	}
+
 
 	for(unsigned x=0;x<a.size();x++)
 	{
@@ -95,23 +130,37 @@ Channels Frequency::split(const Channel & a,float f,float width)
 
 }
 
-Channels Frequency::split(Channel a,std::vector<float> cutoff,float width)
+Channels Frequency::split(Channel a,std::vector<float> cutoff,float width,bool fade)
 {
 	Channels target(cutoff.size()+1);
 	unsigned i;
 	for(i=0;i<cutoff.size();i++)
 	{
-		Channels temp=split(a,cutoff[i],width);
+		Channels temp=split(a,cutoff[i],width,false);
 		target[i]=temp[0];
 		a=temp[1];
 		/*temp=split(a,cutoff[i]);
 		for(unsigned j=0;j<a.size();j++)
 			target[i][j]+=temp[0][j];
 		a=temp[1];*/
+		if(fade)
+		{
+			unsigned N=windowSize(a,cutoff[i],width);
+			for(unsigned j=0;j<N*2 && j<target[i].size();j++)
+			{
+				double f=(double(j)-N)/N;
+				if(f<0)
+					f=0;
+
+				target[i][j]*=f;
+				target[i][target[i].size()-1-j]*=f;
+			}
+		}
 	}
 	target[i]=a;
 
-	Wave::save("bands.wav",target);
+
+	//Wave::save("bands.wav",target);
 
 	return target;
 }
