@@ -16,6 +16,12 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 {
 	if(a.size()==0)
 		return 0;
+	if(reductionOrder>1)
+	{
+		LOG(logWARNING) << "Reduction reduction order to maximum 1" << std::endl;
+		reductionOrder=1;
+	}
+
 
 	unsigned skip=0;
 	unsigned len=0;
