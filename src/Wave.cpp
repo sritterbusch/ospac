@@ -9,6 +9,7 @@
 
 
 #include <iostream>
+#include <fstream>
 
 extern "C" {
 	#include <sndfile.h>
@@ -67,6 +68,68 @@ Channels & Wave::load(const std::string &name, Channels & channels)
 
 	sf_close(sf);
 	LOG(logDEBUG) << "Loading done" << std::endl;
+	return channels;
+}
+
+Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & channels)
+{
+	int length=0;
+	double min=1e99;
+	double max=-1e99;
+	{
+		std::ifstream in(name.c_str());
+		double dummy;
+		for(;!in.eof();length++)
+		{
+			while(!in.eof() && (in.peek()=='#' || in.peek()==' '
+			   || in.peek()=='\n' || in.peek()=='\r'
+			   || in.peek()=='\t'))
+			{
+				char c;
+				c=in.get();
+
+				if(c=='#')
+				{
+					while(!in.eof() && in.peek()!='\n' && in.peek()!='\r')
+						in.get();
+				}
+			}
+			in >> dummy;
+			if(dummy>max)
+			{
+				max=dummy;
+			}
+			if(dummy<min)
+			{
+				min=dummy;
+			}
+		}
+	}
+	unsigned o=channels.size();
+	channels.push_back(Channel(samplerate,length));
+	std::ifstream in(name.c_str());
+	int i=0;
+	for(;!in.eof() && i<length;i++)
+	{
+		while(!in.eof() && (in.peek()=='#' || in.peek()==' '
+		   || in.peek()=='\n' || in.peek()=='\r'
+		   || in.peek()=='\t'))
+		{
+			char c;
+			c=in.get();
+
+			if(c=='#')
+			{
+				while(!in.eof() && in.peek()!='\n' && in.peek()!='\r')
+					in.get();
+			}
+		}
+
+		double d;
+		in >> d;
+		channels[o][i]=(d-min)/(max-min)*64000-32000;
+	}
+
 	return channels;
 }
 
