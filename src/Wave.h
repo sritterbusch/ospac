@@ -39,6 +39,16 @@ public:
 	static Channels & load(const std::string &,Channels & target);
 
 	/**
+	* Load a ascii wave file from the file system using libsndfile, avoiding
+	* copy operations. This routine rescales the input to [-32000,32000].
+	* @param name		file system name of file
+	* @param samplerate sample rate of file
+	* @param target	Channel object to save the data in
+	* @return Channels references containing the wave channels
+    */
+	static Channels & loadAscii(const std::string &name,int samplerate,Channels & target);
+
+	/**
 	 * Save a multi-channel wave file to the file system using libsndfile.
 	 * The sample data is assumed to be in the range of [-32767,32767] and
 	 * entries beyond are limited to the range.
