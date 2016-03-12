@@ -1,4 +1,6 @@
-all:	src/*cpp src/*h
+all:	ospac
+
+ospac:	src/*cpp src/*h
 	cd Release;make all;cd ..
 	
 Release/ospac:	src/*cpp src/*h
