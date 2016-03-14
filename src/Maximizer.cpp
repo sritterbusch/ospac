@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "Maximizer.h"
+#include "Log.h"
 
 double Maximizer::expander(float c,float factor,int order) // Sigmoid-Funktion
 {
@@ -108,7 +109,7 @@ void Maximizer::normalize(Channels & c,float level)
 		if(e>max)
 			max=e;
 	}
-
+	LOG(logINFO) << "Normalization factor: " << level/max << std::endl;
 	if(max!=level)
 	{
 		float factor=level/max;
