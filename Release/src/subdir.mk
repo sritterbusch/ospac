@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Analyzer.cpp \
 ../src/Channel.cpp \
 ../src/CrosstalkFilter.cpp \
 ../src/CrosstalkGate.cpp \
@@ -22,6 +23,7 @@ CPP_SRCS += \
 ../src/Wave.cpp 
 
 OBJS += \
+./src/Analyzer.o \
 ./src/Channel.o \
 ./src/CrosstalkFilter.o \
 ./src/CrosstalkGate.o \
@@ -40,6 +42,7 @@ OBJS += \
 ./src/Wave.o 
 
 CPP_DEPS += \
+./src/Analyzer.d \
 ./src/Channel.d \
 ./src/CrosstalkFilter.d \
 ./src/CrosstalkGate.d \

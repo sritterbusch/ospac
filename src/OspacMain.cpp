@@ -24,6 +24,7 @@
 #include "Equalizer.h"
 #include "Plot.h"
 #include "Frequency.h"
+#include "Analyzer.h"
 #include <stdlib.h>
 
 
@@ -330,7 +331,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
-							  "bandpass",
+							  "bandpass","analyze",
 							  "output",
 							  "help","verbosity","plot"};
 
@@ -392,6 +393,7 @@ int OspacMain::run(void)
 				std::cout << "  --no-factor     Disable channel multiplier" << std::endl;
 				std::cout << "  --eqvoice       Attenuate voice frequency bands" << std::endl;
 				std::cout << "  --no-eqvoice    Do not attenuate frequency bands" << std::endl;
+				std::cout << "  --analyze       Analyze frequency band components" << std::endl;
 				std::cout << "  --normalize     Normalize final mix" << std::endl;
 				std::cout << "  --no-normalize  Disable final normalization" << std::endl;
 				std::cout << "  --bandpass [l] [h] [t] Bandpass from l to h Hertz, sharpness t Hertz" << std::endl;
@@ -655,6 +657,13 @@ int OspacMain::run(void)
 
 					Wave::save(arg[i],temp);
 				}
+			} else
+			if(arg[i]=="analyze")
+			{
+				Channels temp;
+				render(work,operand,temp);
+				for(unsigned c=0;c<temp.size();c++)
+					Analyzer::bandedAnalysis(temp[c]);
 			} else
 			if(arg[i]=="ascii")
 			{
