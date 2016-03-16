@@ -119,7 +119,7 @@ void StereoMix::mixBanded(Channel &c,float leftFactor,float rightFactor,float le
 }
 
 
-void StereoMix::mix(Channels &c,bool spatial,bool banded)
+void StereoMix::mix(Channels &c,float maxfactor,bool spatial,float maxdelay, bool banded)
 {
 	if(c.size()==0)
 		return;
@@ -128,14 +128,14 @@ void StereoMix::mix(Channels &c,bool spatial,bool banded)
 	const int vars=4;
 
 	static const double settingsSpatial[sets][vars]={
-			{0.9,1,0.03,0},
-			{0.95,0.95,0.0015,0.0015},
-			{1,0.9,0,0.03}};
+			{maxfactor,1.0/maxfactor,maxdelay,0},
+			{1.0,1.0,maxdelay/2,maxdelay/2},
+			{1.0/maxfactor,maxfactor,0,maxdelay/2}};
 
 	static const double settingsStereo[sets][vars]={
-			{0.9,1.1,0.00,0},
+			{maxfactor,1.0/maxfactor,0.00,0},
 			{1.0,1.0,0.0000,0.0000},
-			{1.1,0.9,0,0.00}};
+			{1.0/maxfactor,maxfactor,0,0.00}};
 
 	double settings[sets][vars];
 

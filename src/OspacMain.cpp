@@ -290,6 +290,14 @@ OspacMain::OspacMain(std::vector<std::string> aArg) : arg(aArg)
 	stdVoiceEq[MIX]=false;
 	stdVoiceEq[RAW]=false;
 
+	stdStereoLevel[VOICE]=0.9;
+	stdStereoLevel[MIX]  =0.9;
+	stdStereoLevel[RAW]  =0.9;
+
+	stdStereoSpatial[VOICE]=0.03;
+	stdStereoSpatial[MIX]  =0.03;
+	stdStereoSpatial[RAW]  =0.03;
+
 	setStandard();
 }
 
@@ -304,6 +312,8 @@ void OspacMain::setStandard()
 	skip=stdSkip[argMode];
 	skipSilence=stdSkipSilence[argMode];
 	voiceEq=stdVoiceEq[argMode];
+	stereoLevel=stdStereoLevel[argMode];
+	stereoSpatial=stdStereoSpatial[argMode];
 
 	transitionMode=nextTransitionMode;
 	transitionSeconds=nextTransitionSeconds;
@@ -314,6 +324,7 @@ void OspacMain::setStandard()
 	bandpassLow=bandpassHigh=bandpassTransition=0;
 
 	skipOrder=0.75;
+
 }
 
 OspacMain::~OspacMain()
@@ -321,6 +332,7 @@ OspacMain::~OspacMain()
 }
 
 std::string OspacMain::options[]={"spatial","stereo","mono","multi",
+							  "set-stereo-level","set-stereo-spatial",
 							  "voice","mix","raw",
 							  "ascii",
 							  "fade","overlap",
@@ -363,6 +375,9 @@ int OspacMain::run(void)
 				std::cout << "  --multi         Create multi channel output" << std::endl;
 				std::cout << "  --mono          Create mono output" << std::endl;
 				std::cout << "  --output [file] Write final output to [file] in wave format" << std::endl;
+				std::cout << std::endl;
+				std::cout << "  --set-stereo-level [n]  Set maximum channel volume factor (0.9)" << std::endl;
+				std::cout << "  --set-stereo-spatial [n] Set maximum interaural delay (0.03)" << std::endl;
 				std::cout << std::endl;
 				std::cout << " New segment selection:" << std::endl;
 				std::cout << "  --voice         Start of voice channel segment (default)"<<std::endl;
@@ -546,6 +561,24 @@ int OspacMain::run(void)
 			{
 				maximizer=0;
 			}else
+			if(arg[i]=="set-stereo-level")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					stereoLevel=atof(arg[i].c_str());
+				}
+			} else
+			if(arg[i]=="set-stereo-spatial")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					stereoSpatial=atof(arg[i].c_str());
+				}
+			} else
 			if(arg[i]=="leveler")
 			{
 				leveler=true;
@@ -756,7 +789,7 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 		{
 			LOG(logDEBUG) << "StereoMix" << std::endl;
 			StereoMix mix;
-			mix.mix(work,true);
+			mix.mix(work,stereoLevel,true,stereoSpatial);
 			work=mix.getTarget();
 		}
 		break;
@@ -765,7 +798,7 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 		{
 			LOG(logDEBUG) << "StereoMix" << std::endl;
 			StereoMix mix;
-			mix.mix(work);
+			mix.mix(work,stereoLevel);
 			work=mix.getTarget();
 		}
 		break;

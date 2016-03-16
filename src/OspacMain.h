@@ -152,6 +152,17 @@ protected:
 	 */
 	float	bandpassTransition;
 
+	/**
+	 * Current level factor for stereo or spatial amplituds
+	 */
+	float	stereoLevel;
+
+	/**
+	 * Current maximum interaural detail for spatial stereo
+	 */
+	float	stereoSpatial;
+
+
 
 	/**
 	 * Set all variables to their standard setting dependent on data mode
@@ -211,6 +222,17 @@ protected:
 	 * Standard voice eq setting
 	 */
 	bool    stdVoiceEq[MaxArgMode];
+
+	/**
+	 * Standard stereo level
+	 */
+	float   stdStereoLevel[MaxArgMode];
+
+	/**
+	 * Standard spatial time difference
+	 */
+	float   stdStereoSpatial[MaxArgMode];
+
 
 public:
 	/**

@@ -48,10 +48,12 @@ public:
 	/**
 	 * Mix channels into target using equidistant positions
 	 * @param c			Channels
+	 * @param maxfactor Maximum factor for spatial volume change
 	 * @param spatial	Use spatial delay?
+	 * @param maxdelay  Maximum interaural delay
 	 * @param banded	Use frequency dependence?
 	 */
-	void        mix(Channels &c,bool spatial=false,bool banded=false);
+	void        mix(Channels &c,float maxfactor=0.9,bool spatial=false,float maxdelay=0.03, bool banded=false);
 
 	/**
 	 * Request current stereo mixdown
