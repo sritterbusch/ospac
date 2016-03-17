@@ -29,6 +29,8 @@ std::vector<std::vector<unsigned> > Plot::histogramm(const Channel &channel,unsi
 	unsigned maxv=1;
 	unsigned zero=(int)(0.5*sizeY);
 
+	int last=zero;
+
 	for(unsigned long t=0;t<size;t++)
 	{
 		int value=(int)((channel[t]/max/2+0.5)*sizeY);
@@ -37,9 +39,10 @@ std::vector<std::vector<unsigned> > Plot::histogramm(const Channel &channel,unsi
 			value=0;
 		if(value>=sizeY)
 			value=sizeY-1;
-		if(value>=zero)
+		int newLast=value;
+		if(value>=last)
 		{
-			for(;value>=zero;value--)
+			for(;value>=last;value--)
 			{
 				unsigned v=(map[x][value]++);
 				if(v>maxv)
@@ -47,13 +50,14 @@ std::vector<std::vector<unsigned> > Plot::histogramm(const Channel &channel,unsi
 			}
 		} else
 		{
-			for(;value<=zero;value++)
+			for(;value<=last;value++)
 			{
 				unsigned v=(map[x][value]++);
 				if(v>maxv)
 					maxv=v;
 			}
 		}
+		last=newLast;
 
 	}
 	for(unsigned x=0;x<sizeX;x++)
