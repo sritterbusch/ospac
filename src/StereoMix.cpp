@@ -130,7 +130,7 @@ void StereoMix::mix(Channels &c,float maxfactor,bool spatial,float maxdelay, boo
 	static const double settingsSpatial[sets][vars]={
 			{maxfactor,1.0/maxfactor,maxdelay,0},
 			{1.0,1.0,maxdelay/2,maxdelay/2},
-			{1.0/maxfactor,maxfactor,0,maxdelay/2}};
+			{1.0/maxfactor,maxfactor,0,maxdelay}};
 
 	static const double settingsStereo[sets][vars]={
 			{maxfactor,1.0/maxfactor,0.00,0},
