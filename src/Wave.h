@@ -25,18 +25,22 @@ public:
 	/**
 	 * Load a wave file from the file system using libsndfile.
 	 * @param  name 	file system name of file
+	 * @param skip      skip seconds
+	 * @param length	maximum length to load (after skip)
 	 * @return Channels containing the wave channels
 	 */
-	static Channels   load(const std::string &);
+	static Channels   load(const std::string &,float skip=0,float length=1e+99);
 
 	/**
 	 * Load a wave file from the file system using libsndfile, avoiding
 	 * copy operations.
 	 * @param name		file system name of file
 	 * @param target	Channel object to save the data in
+	 * @param skip      skip seconds
+	 * @param length	maximum length to load (after skip)
 	 * @return Channels references containing the wave channels
 	 */
-	static Channels & load(const std::string &,Channels & target);
+	static Channels & load(const std::string &,Channels & target,float skip=0,float length=1e+99);
 
 	/**
 	* Load a ascii wave file from the file system using libsndfile, avoiding
@@ -44,9 +48,11 @@ public:
 	* @param name		file system name of file
 	* @param samplerate sample rate of file
 	* @param target	Channel object to save the data in
+	* @param skip      skip seconds
+	* @param length	maximum length to load (after skip)
 	* @return Channels references containing the wave channels
     */
-	static Channels & loadAscii(const std::string &name,int samplerate,Channels & target);
+	static Channels & loadAscii(const std::string &name,int samplerate,Channels & target,float skip=0,float length=1e+99);
 
 	/**
 	 * Save a multi-channel wave file to the file system using libsndfile.

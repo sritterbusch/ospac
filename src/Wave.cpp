@@ -18,7 +18,7 @@ extern "C" {
 #include "Wave.h"
 #include "Log.h"
 
-Channels & Wave::load(const std::string &name, Channels & channels)
+Channels & Wave::load(const std::string &name, Channels & channels,float skip,float length)
 {
 	LOG(logINFO) << "Loading "<< name << std::endl;
 
@@ -42,10 +42,18 @@ Channels & Wave::load(const std::string &name, Channels & channels)
 
 	unsigned o=channels.size();
 
-	for(int i=0;i<info.channels;i++)
-		channels.push_back(Channel((int)info.samplerate,std::vector<float>(info.frames)));
+	unsigned skiplen=skip*(int)info.samplerate;
+	unsigned fulllen=length*(int)info.samplerate;
 
-	for(int i=0;i<info.frames;)
+	if(skiplen>info.frames)
+		skiplen=info.frames;
+	if(fulllen>info.frames-skiplen || length>1e+90)
+		fulllen=info.frames-skiplen;
+
+	for(int i=0;i<info.channels;i++)
+		channels.push_back(Channel((int)info.samplerate,std::vector<float>(fulllen)));
+
+	for(int i=0;i<info.frames && i<skiplen+fulllen;)
 	{
 		int items=65536;
 
@@ -61,7 +69,8 @@ Channels & Wave::load(const std::string &name, Channels & channels)
 
 		for(int j=0,t=0;j<items;i++,j++)
 			for(int c=0;c<info.channels;c++)
-				channels[o+c][i]=buf[t++];
+				if(i>=skiplen && i<=skiplen+fulllen)
+					channels[o+c][i-skiplen]=buf[t++];
 	}
 
 	delete [] buf;
@@ -71,11 +80,15 @@ Channels & Wave::load(const std::string &name, Channels & channels)
 	return channels;
 }
 
-Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & channels)
+Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & channels,float skip,float maxlength)
 {
 	int length=0;
 	double min=1e99;
 	double max=-1e99;
+
+	unsigned skiplen=skip*samplerate;
+	unsigned fulllen=maxlength*samplerate;
+
 	{
 		std::ifstream in(name.c_str());
 		double dummy;
@@ -95,21 +108,29 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 				}
 			}
 			in >> dummy;
-			if(dummy>max)
+			if(length>=skiplen && (length<fulllen || maxlength>1e+90))
 			{
-				max=dummy;
-			}
-			if(dummy<min)
-			{
-				min=dummy;
+				if(dummy>max)
+				{
+					max=dummy;
+				}
+				if(dummy<min)
+				{
+					min=dummy;
+				}
 			}
 		}
 	}
+	if(skip>length)
+		skip=length;
+	if(fulllen>length-skip || maxlength>1e+90)
+		fulllen=length-skip;
+
 	unsigned o=channels.size();
-	channels.push_back(Channel(samplerate,length));
+	channels.push_back(Channel(samplerate,fulllen));
 	std::ifstream in(name.c_str());
 	int i=0;
-	for(;!in.eof() && i<length;i++)
+	for(;!in.eof() && i<length && i<skiplen+fulllen;i++)
 	{
 		while(!in.eof() && (in.peek()=='#' || in.peek()==' '
 		   || in.peek()=='\n' || in.peek()=='\r'
@@ -127,19 +148,20 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 
 		double d;
 		in >> d;
-		channels[o][i]=(d-min)/(max-min)*64000-32000;
+		if(i>=skiplen && i<skiplen+fulllen)
+		channels[o][i-skiplen]=(d-min)/(max-min)*64000-32000;
 	}
 
 	return channels;
 }
 
-Channels Wave::load(const std::string &name)
+Channels Wave::load(const std::string &name,float skip,float length)
 {
 	std::vector<Channel> channels;
 
 	LOG(logINFO) << "Loading "<< name << std::endl;
 
-	return load(name,channels);
+	return load(name,channels,skip,length);
 }
 
 int Wave::save(const std::string &name,Channel & channel)
