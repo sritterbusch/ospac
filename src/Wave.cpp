@@ -85,6 +85,8 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 	int length=0;
 	double min=1e99;
 	double max=-1e99;
+	double sum=0;
+	unsigned count=0;
 
 	unsigned skiplen=skip*samplerate;
 	unsigned fulllen=maxlength*samplerate;
@@ -110,6 +112,8 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 			in >> dummy;
 			if(length>=skiplen && (length<fulllen || maxlength>1e+90))
 			{
+				sum+=dummy;
+				count++;
 				if(dummy>max)
 				{
 					max=dummy;
@@ -125,6 +129,20 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 		skip=length;
 	if(fulllen>length-skip || maxlength>1e+90)
 		fulllen=length-skip;
+
+	if(count==0)
+		count=1;
+	double null=sum/count;
+	if(min>null)
+		min=null-1;
+	if(max<null)
+		max=null+1;
+
+	// Kill DC signal...
+	if(2*null-min>max)
+		max=2*null-min;
+	if(2*null-max<min)
+		min=2*null-max;
 
 	unsigned o=channels.size();
 	channels.push_back(Channel(samplerate,fulllen));
