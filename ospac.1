@@ -39,9 +39,12 @@ Write final output to
 .I [file]
 in wave format
 .IP "--set-stereo-level [n]"
-Set maximum volume factor for stereo and spatial mode (0.9)
+Set maximum volume factor for stereo and spatial mode (0.9) - 
+the lower the stronger the effect is
 .IP "--set-stereo-spatial [n]"
-Set maximum inter-aural time delay in spatial mode (0.03)
+Set maximum inter-aural delay distance in meter in spatial mode (0.03) -
+the higher the stronger - the average distance between human ears are 
+0.22 (meter) so you probably should not go above that limit
 .IP "--plot [file]"
 Write a wave form image to
 .I [file]
