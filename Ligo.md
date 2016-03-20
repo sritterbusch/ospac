@@ -76,3 +76,8 @@ other generating gravitational waves that reached Earth.
 Apart from this, you can very well use the --bandpass filter to reduce low
 frequency rumbling or high frequency hissing.  For this, you should most
 probably use wider transition intervals for faster processing.
+
+
+This text originally appeared on 
+https://sendegate.de/t/ospac-neuer-bandpass-oder-wir-lauschen-den-gravitationswellen/2890
+in German.
