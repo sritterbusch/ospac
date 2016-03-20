@@ -139,5 +139,5 @@ One channel    |  ++  |      ++     |   +    |      --       |    +    |    +
 Mono rendering |  ++  |      ++     |   ++   |      ++       |    -    |    --
 Compression    |  43  |      47     |   54   |      60       |    59   |    63
 
-The compression are kBit/s with fixed quality setting in lame for above
+The compression rates are in kBit/s with fixed quality setting in lame for above
 examples.
