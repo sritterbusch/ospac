@@ -162,7 +162,15 @@ protected:
 	 */
 	float	stereoSpatial;
 
+	/**
+	 * Current setting for seconds to skip at loading
+	 */
+	float   loadSkipSeconds;
 
+	/**
+	 * Current setting for maximal seconds to load
+	 */
+	float   loadMaxSeconds;
 
 	/**
 	 * Set all variables to their standard setting dependent on data mode
@@ -222,17 +230,6 @@ protected:
 	 * Standard voice eq setting
 	 */
 	bool    stdVoiceEq[MaxArgMode];
-
-	/**
-	 * Standard stereo level
-	 */
-	float   stdStereoLevel[MaxArgMode];
-
-	/**
-	 * Standard spatial time difference
-	 */
-	float   stdStereoSpatial[MaxArgMode];
-
 
 public:
 	/**
