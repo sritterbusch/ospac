@@ -74,5 +74,5 @@ These are two massive black holes well beyond our sight that fell into each
 other.
 
 Apart from this, you can very well use the --bandpass filter to reduce low
-frequency rumbling or high frequency hissing.  For this, you can most
-probably using wider transition intervals for faster processing.
+frequency rumbling or high frequency hissing.  For this, you should most
+probably use wider transition intervals for faster processing.
