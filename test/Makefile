@@ -1,6 +1,6 @@
 all:	volume-changes-leveled.wav intro-normalized-skip.wav \
 	intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
-	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav \
+	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav multi-test.wav \
 	ligo-raw.wav ligo-filter.wav ligo-event.wav
 
 clean:
@@ -8,7 +8,7 @@ clean:
 		intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 		stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav \
 		stereo-test-mono.wav spatial-test-mono.wav spatial-strong-mono.wav stereo-strong-mono.wav \
-		stereo-mono-test.wav mono-test.wav \
+		stereo-mono-test.wav mono-test.wav multi-test.wav \
 		H-H1_LOSC_4_V1-1126259446-32.txt L-L1_LOSC_4_V1-1126259446-32.txt \
 		ligo-raw.wav ligo-filter.wav ligo-event.wav *~ *ppm 
 
@@ -101,6 +101,12 @@ mono-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-pnmscale .5 < mono-test.ppm|pnmtopng > mono-test.png && mv mono-test.png ../images/
 	-lame -V8.5 -q0 --lowpass 22050 --resample 44100 mono-test.wav mono-test.mp3 && mv mono-test.mp3 ../examples/
 	-rm mono-test.ppm
+
+multi-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
+	../Release/ospac --multi {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output multi-test.wav
+	../Release/ospac --raw multi-test.wav --plot multi-test.ppm
+	-pnmscale .5 < multi-test.ppm|pnmtopng > multi-test.png && mv multi-test.png ../images/
+	-rm multi-test.ppm
 
 H-H1_LOSC_4_V1-1126259446-32.txt:
 	wget https://losc.ligo.org/s/events/GW150914/H-H1_LOSC_4_V1-1126259446-32.txt.gz
