@@ -71,7 +71,7 @@ What's was at 16s? We can isolate this event using the skip filter:
 [Listen to the isolated event in the filtered ligo data](https://github.com/sritterbusch/ospac/raw/master/examples/ligo-event.mp3)
 
 These are two massive black holes well beyond our sight that fell into each 
-other.
+other generating gravitational waves that reached Earth.
 
 Apart from this, you can very well use the --bandpass filter to reduce low
 frequency rumbling or high frequency hissing.  For this, you should most
