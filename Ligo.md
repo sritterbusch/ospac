@@ -29,6 +29,7 @@ also provide files with 16384Hz sample frequency):
     ospac --raw ligo-raw.wav --plot ligo-raw.ppm
 
 ![Raw ligo data](https://github.com/sritterbusch/ospac/raw/master/images/ligo-raw.png)
+
 [Listen to the raw ligo data](https://github.com/sritterbusch/ospac/raw/master/examples/ligo-raw.mp3)
 
 ## Band pass filter
@@ -50,6 +51,7 @@ Using the --bandfilter of ospac with a very thin transition interval of just
     ospac --raw ligo-filter.wav --plot ligo-filter.ppm
 
 ![Raw data band filtered 80-300Hz](https://github.com/sritterbusch/ospac/raw/master/images/ligo-filter.png)
+
 [Listen to the filtered ligo data](https://github.com/sritterbusch/ospac/raw/master/examples/ligo-filter.mp3)
 
 ## Isolate the final result
@@ -65,6 +67,7 @@ What's was at 16s? We can isolate this event using the skip filter:
     ospac --raw ligo-event.wav --plot ligo-event.ppm
 
 ![Isolated event in the raw data band filtered 80-300Hz](https://github.com/sritterbusch/ospac/raw/master/images/ligo-event.png)
+
 [Listen to the isolated event in the filtered ligo data](https://github.com/sritterbusch/ospac/raw/master/examples/ligo-event.mp3)
 
 These are two massive black holes well beyond our sight that fell into each 
