@@ -4,7 +4,8 @@ It can be highly beneficial to a podcast to render conversation in stereo,
 to help the listener to differentiate speakers even with similar voices. 
 But there are quite some issues that need to be taken into consideration:
 For example, listening experience, one-channel and mono reproduction,
-compression and audio quality.
+compression and audio quality. There is a German version of this text on
+https://sendegate.de/t/ospac-mono-stereo-raeumlich-multichannel/2933 .
 
 ## Mono mode
 
@@ -100,7 +101,7 @@ results in as many channels as they were provided. This mode is useful for
 just using the crosstalk gate or filter and then rely on a another audio
 tool for the actual stereo or mono rendering.
 
-    ospac --multi --set-stereo-spatial 0.2 \
+    ospac --multi \
           {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav \
           --output multi-test.wav
     ospac --raw multi-test.wav --plot multi-test.ppm
