@@ -93,6 +93,10 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 
 	{
 		std::ifstream in(name.c_str());
+
+		if(in.fail())
+			return channels;
+
 		double dummy;
 		for(;!in.eof();length++)
 		{

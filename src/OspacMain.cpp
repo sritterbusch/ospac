@@ -253,7 +253,6 @@ OspacMain::OspacMain(std::vector<std::string> aArg) : arg(aArg)
 	nextTransitionMode=transitionMode=NONE;
 	nextTransitionSeconds=transitionSeconds=0;
 
-
 	stdMaximizer[VOICE]=1.25;
 	stdMaximizer[MIX]  =0.0; // disable
 	stdMaximizer[RAW]  =0.0; // disable
@@ -705,15 +704,30 @@ int OspacMain::run(void)
 					if(i+1<arg.size())
 					{
 						i++;
+						unsigned before=work.size();
 						Wave::loadAscii(arg[i],samplerate,work,loadSkipSeconds,loadMaxSeconds);
+						if(work.size()==before)
+						{
+							LOG(logERROR) << "Could not load " << arg[i] << std::endl;
+							return 2;
+						}
 					}
 				}
 
 			} else
+			{
 				LOG(logERROR) << "command line option " << arg[i] << " was not recognized.";
+				return 1;
+			}
 		} else
 		{
+			unsigned before=work.size();
 			Wave::load(arg[i],work,loadSkipSeconds,loadMaxSeconds);
+			if(work.size()==before)
+			{
+				LOG(logERROR) << "Could not load " << arg[i] << std::endl;
+				return 2;
+			}
 		}
 	}
 
@@ -873,7 +887,17 @@ int main(int argc,char * argv[])
 
 	OspacMain podchain(arg);
 
-	return podchain.run();
+	try
+	{
+		return podchain.run();
+	}
+	catch(std::bad_alloc& ba)
+	{
+		LOG(logERROR) << "Out of memory: " << ba.what() << std::endl;
+		LOG(logINFO)  << "Try to increase your physical or virtual memory (swap)" << std::endl;
+		return 3;
+	}
+
 }
 
 bool OspacMain::isOption(std::string &o)
