@@ -1,10 +1,10 @@
-all:	volume-changes-leveled.wav intro-normalized-skip.wav \
+all:	volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
 	intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav multi-test.wav \
 	ligo-raw.wav ligo-filter.wav ligo-event.wav
 
 clean:
-	rm -f 	intro-normalized.wav volume-changes-leveled.wav intro-normalized-skip.wav \
+	rm -f 	intro-normalized.wav volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
 		intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 		stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav \
 		stereo-test-mono.wav spatial-test-mono.wav spatial-strong-mono.wav stereo-strong-mono.wav \
@@ -29,6 +29,12 @@ intro-normalized-skip.wav:	intro-normalized.wav ../Release/ospac
 	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip.wav --plot skip-result.ppm
 	-pnmscale .5 < skip-result.ppm |pnmtopng > skip-result.png && mv skip-result.png ../images/
 	-rm skip-result.ppm
+
+intro-normalized-noise.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --noise intro-normalized.wav --output intro-normalized-noise.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-noise.wav --plot noise-result.ppm
+	-pnmscale .5 < noise-result.ppm |pnmtopng > noise-result.png && mv noise-result.png ../images/
+	-rm noise-result.ppm
 
 intro-factor-2.wav:	volume-changes.wav ../Release/ospac
 	../Release/ospac --raw --factor 2 volume-changes.wav --output intro-factor-2.wav
