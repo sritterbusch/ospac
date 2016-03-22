@@ -35,6 +35,17 @@ public:
 	 * @return
 	 */
 	static float silence(Channels &channels,float silenceLevel=0.01,float minsec=0.5,float mintransition=0.05,float reductionOrder=0.75);
+
+    /**
+	 * Skip noise in channels if absolute sum of voltages are higher than
+	 * silence level fraction compared to maximum level.
+	 * @param channels Channels where silence is to be skipped
+	 * @param silenceLevel fraction compared to maximum what is considered silence
+	 * @param minsec minimum time of silence before skipping is considered
+	 * @param maxtransition maximum time of transition
+	 * @return
+	 */
+	static float noise(Channels &channels,float silenceLevel=0.01,float minsec=0.1,float maxtransition=0.05);
 };
 
 #endif /* SKIP_H_ */
