@@ -118,7 +118,12 @@ protected:
 	bool    xFilter;
 
 	/**
-	 * Should the current segment appy the skip-filter
+	 * Should the current segment apply the all but silence-filter
+	 */
+	bool    noise;
+
+	/**
+	 * Should the current segment apply the skip-filter
 	 */
 	bool    skip;
 

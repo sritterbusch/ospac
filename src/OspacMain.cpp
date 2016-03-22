@@ -321,6 +321,8 @@ void OspacMain::setStandard()
 
 	loadMaxSeconds=1e+99;
 
+	noise=false;
+
 }
 
 OspacMain::~OspacMain()
@@ -336,6 +338,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "leveler","no-leveler","target",
 							  "normalize","no-normalize",
 							  "skip","no-skip","skip-level","skip-order",
+							  "noise",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
@@ -395,6 +398,7 @@ int OspacMain::run(void)
 				std::cout << "  --skip-level    Fraction of maximum level considered silence (0.01)" << std::endl;
 				std::cout << "  --skip-order    Order of reduction (0-1, default: 0.75)" << std::endl;
 				std::cout << "  --no-skip       Do not skip any content" << std::endl;
+				std::cout << "  --noise         Skip all but silence" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Leveling, equalizer and normalization:" << std::endl;
 				std::cout << "  --leveler       Enable selective leveler" << std::endl;
@@ -600,6 +604,10 @@ int OspacMain::run(void)
 			{
 				normalizer=false;
 			} else
+			if(arg[i]=="noise")
+			{
+				noise=true;
+			} else
 			if(arg[i]=="skip")
 			{
 				skip=true;
@@ -791,6 +799,13 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	{
 		LOG(logDEBUG) << "Skip with parameter "<< skipSilence << std::endl;
 		Skip::silence(work,skipSilence,0.5,0.05,skipOrder);
+		skip=false;
+	}
+	if(noise)
+	{
+		LOG(logDEBUG) << "Skip signal" << std::endl;
+		Skip::noise(work,skipSilence);
+		noise=false;
 	}
 
 	switch(mixMode)
