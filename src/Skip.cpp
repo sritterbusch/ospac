@@ -139,3 +139,105 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 	LOG(logINFO) << "Skipped " << skipped << "s" << std::endl;
 	return skipped;
 }
+
+float Skip::noise(Channels &a,float level,float minsec)
+{
+	if(a.size()==0)
+		return 0;
+
+
+	unsigned skip=0;
+	unsigned len=0;
+	unsigned samplerate=0;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()>samplerate)
+			samplerate=a[c].samplerate();
+
+	minsec*=samplerate;
+	minsec=(int)minsec;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()<samplerate)
+			a[c]=a[c].resampleTo(samplerate);
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()>len)
+			len=a[c].size();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()<len)
+			a[c]=a[c].resizeTo(len);
+
+	float max=0;
+
+	for(unsigned i=0;i<len;i++)
+	{
+		float sum=0;
+		for(unsigned c=0;c<a.size();c++)
+			sum+=fabs(a[c][i]);
+		if(sum>max)
+			max=sum;
+	}
+	max/=a.size();
+
+	level*=max;
+
+	unsigned lastend=0;
+
+	for(unsigned i=0;i<len;i++)
+	{
+		float sum;
+		int   d=-1,s=-1;
+		do {
+			do {
+				sum=0;
+				d++;
+				for(unsigned c=0;c<a.size();c++)
+					sum+=fabs(a[c][i+d+skip]);
+				sum/=a.size();
+			} while(sum>level && (d+int(i+skip))<int(len));
+			s=d;
+			do {
+				sum=0;
+				s++;
+				for(unsigned c=0;c<a.size();c++)
+					sum+=fabs(a[c][i+s+skip]);
+				sum/=a.size();
+			} while(sum<=level && (s+int(i+skip))<int(len));
+
+		} while(s-d<minsec && (s+int(i+skip))<int(len));
+		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found signal until "<<double(i+d)/samplerate<<std::endl;
+		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found silence until "<<double(i+s)/samplerate<<std::endl;
+
+		if(s-d>=minsec)
+		{
+			skip+=d;
+
+			lastend=i+s;
+
+			for(;i<lastend-d;i++)
+				for(unsigned c=0;c<a.size();c++)
+					a[c][i]=a[c][i+skip];
+
+			LOG(logDEBUG) << "Skip now: " << skip << " ("<<double(skip)/samplerate <<")"<< std::endl;
+			LOG(logDEBUG) << "Position now: " << i << " (" <<double(i)/samplerate << ")" << std::endl;
+		} else
+		{
+			i=len+1;
+			skip+=s;
+		}
+		i--;
+	}
+	for(unsigned c=0;c<a.size();c++)
+	{
+		a[c]=a[c].resizeTo(len-skip);
+	}
+	LOG(logDEBUG) << "Size before: " << len << " Size after: " << a[0].size()
+			<< std::endl;
+	float skipped=float(skip)/samplerate;
+	LOG(logINFO) << "Skipped " << skipped << "s" << std::endl;
+	return skipped;
+}
+
+
