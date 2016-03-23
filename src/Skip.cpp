@@ -140,7 +140,7 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 	return skipped;
 }
 
-float Skip::noise(Channels &a,float level,float minsec)
+float Skip::noise(Channels &a,float level,float minsec,float transition)
 {
 	if(a.size()==0)
 		return 0;
@@ -154,8 +154,14 @@ float Skip::noise(Channels &a,float level,float minsec)
 		if(a[c].samplerate()>samplerate)
 			samplerate=a[c].samplerate();
 
+	if(transition>minsec/2)
+		transition=minsec/2;
+
 	minsec*=samplerate;
 	minsec=(int)minsec;
+
+	transition*=samplerate;
+	transition=(int)transition;
 
 	for(unsigned c=0;c<a.size();c++)
 		if(a[c].samplerate()<samplerate)
@@ -215,6 +221,18 @@ float Skip::noise(Channels &a,float level,float minsec)
 			skip+=d;
 
 			lastend=i+s;
+
+			if(i>transition)
+				for(unsigned j=0;j<transition;j++)
+				{
+					double f=double(j)/transition;
+					for(unsigned c=0;c<a.size();c++)
+						a[c][i-transition+j]=a[c][i-transition+j]*(1-f)
+											+a[c][i+skip+j]*f;
+				}
+
+			skip+=transition;
+			lastend-=transition;
 
 			for(;i<lastend-d;i++)
 				for(unsigned c=0;c<a.size();c++)

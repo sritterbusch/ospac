@@ -42,9 +42,10 @@ public:
 	 * @param channels Channels where silence is to be skipped
 	 * @param silenceLevel fraction compared to maximum what is considered silence
 	 * @param minsec minimum time of silence before skipping is considered
+	 * @param transition time in seconds
 	 * @return
 	 */
-	static float noise(Channels &channels,float silenceLevel=0.01,float minsec=0.1);
+	static float noise(Channels &channels,float silenceLevel=0.01,float minsec=0.1,float transition=0.05);
 };
 
 #endif /* SKIP_H_ */
