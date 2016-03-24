@@ -145,7 +145,6 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 	if(a.size()==0)
 		return 0;
 
-
 	unsigned skip=0;
 	unsigned len=0;
 	unsigned samplerate=0;
@@ -247,10 +246,23 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 		}
 		i--;
 	}
+	double l1=0;
 	for(unsigned c=0;c<a.size();c++)
 	{
 		a[c]=a[c].resizeTo(len-skip);
+		for(unsigned i=0;i<a[c].size();i++)
+			l1+=fabs(a[c][i]);
 	}
+	l1/=(len-skip)*a.size();
+	
+	LOG(logINFO)  << "Linf of all: " << max << std::endl;
+	LOG(logINFO)  << "L1 of noise: " << l1 << std::endl;
+	double SNR=max/l1;
+	double bits=log(SNR)/log(2);
+	double db=bits*6;
+	
+	LOG(logINFO)  << "S/N Ratio  : " << SNR << ", " << bits << " bits, " << db << "dB" << std::endl;
+	
 	LOG(logDEBUG) << "Size before: " << len << " Size after: " << a[0].size()
 			<< std::endl;
 	float skipped=float(skip)/samplerate;
