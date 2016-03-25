@@ -33,7 +33,7 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 
 
 	mintransition*=samplerate;
-	mintransition=(int)mintransition;
+	unsigned mintransition_u=(int)mintransition;
 
 	for(unsigned c=0;c<a.size();c++)
 		if(a[c].samplerate()<samplerate)
@@ -61,7 +61,7 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 
 	level*=max;
 
-	int mincount=minsec*samplerate;
+	unsigned mincount=minsec*samplerate;
 
 	for(unsigned i=0;i+skip<len;i++)
 	{
@@ -75,7 +75,7 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 			sum/=a.size();
 		} while(sum<level && (d+int(i+skip))<int(len));
 
-		if(d>mincount+mintransition)
+		if(d>mincount+mintransition_u)
 		{
 			float delta;
 
@@ -157,10 +157,10 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 		transition=minsec/2;
 
 	minsec*=samplerate;
-	minsec=(int)minsec;
+	unsigned minsec_u=(unsigned)minsec;
 
 	transition*=samplerate;
-	transition=(int)transition;
+	unsigned transition_u=(unsigned)transition;
 
 	for(unsigned c=0;c<a.size();c++)
 		if(a[c].samplerate()<samplerate)
@@ -210,8 +210,9 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 					sum+=fabs(a[c][i+s+skip]);
 				sum/=a.size();
 			} while(sum<=level && (s+int(i+skip))<int(len));
+			s--;
 
-		} while(s-d<minsec && (s+int(i+skip))<int(len));
+		} while(s-d<minsec_u && (s+int(i+skip))<int(len));
 		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found signal until "<<double(i+d)/samplerate<<std::endl;
 		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found silence until "<<double(i+s)/samplerate<<std::endl;
 
@@ -221,17 +222,17 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 
 			lastend=i+s;
 
-			if(i>transition)
-				for(unsigned j=0;j<transition;j++)
+			if(i>transition_u)
+				for(unsigned j=0;j<transition_u;j++)
 				{
-					double f=double(j)/transition;
+					double f=double(j)/transition_u;
 					for(unsigned c=0;c<a.size();c++)
-						a[c][i-transition+j]=a[c][i-transition+j]*(1-f)
+						a[c][i-transition_u+j]=a[c][i-transition_u+j]*(1-f)
 											+a[c][i+skip+j]*f;
 				}
 
-			skip+=transition;
-			lastend-=transition;
+			skip+=transition_u;
+			lastend-=transition_u;
 
 			for(;i<lastend-d;i++)
 				for(unsigned c=0;c<a.size();c++)
