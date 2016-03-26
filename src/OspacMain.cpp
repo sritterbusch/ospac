@@ -333,7 +333,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "set-stereo-level","set-stereo-spatial",
 							  "voice","mix","raw",
 							  "ascii",
-							  "fade","overlap",
+							  "fade","overlap","parallel",
 							  "factor", "no-factor",
 							  "leveler","no-leveler","target",
 							  "normalize","no-normalize",
@@ -386,6 +386,7 @@ int OspacMain::run(void)
 				std::cout << " Segment transition:" << std::endl;
 				std::cout << "  --fade [s]      Fading transition over [s] seconds" << std::endl;
 				std::cout << "  --overlap [s]   Overlapping transition over [s] seconds" << std::endl;
+				std::cout << "  --parallel      Render previous and next segment in parallel" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Crosstalk filter:" << std::endl;
 				std::cout << "  --xgate         Enable robust crosstalk gate" << std::endl;
@@ -546,6 +547,11 @@ int OspacMain::run(void)
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 					nextTransitionSeconds=atof(arg[i].c_str());
 				}
+				LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
+			} else
+			if(arg[i]=="parallel")
+			{
+				nextTransitionMode=PARALLEL;
 				LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
 			} else
 			if(arg[i]=="factor")
@@ -724,7 +730,7 @@ int OspacMain::run(void)
 
 			} else
 			{
-				LOG(logERROR) << "command line option " << arg[i] << " was not recognized.";
+				LOG(logERROR) << "command line option " << arg[i] << " was not recognized." << std::endl;
 				return 1;
 			}
 		} else
@@ -875,6 +881,10 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	case FADE:
 		LOG(logDEBUG) << "Fade transition" << std::endl;
 		target=Merge::fade(operand,work,transitionSeconds);
+		break;
+	case PARALLEL:
+		LOG(logDEBUG) << "Parallel rendering" << std::endl;
+		target=Merge::parallel(operand,work);
 		break;
 	default:
 		break;

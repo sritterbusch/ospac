@@ -78,6 +78,17 @@ Channels Merge::fade(Channels &a,Channels &b,float sec)
 	return target;
 }
 
+Channels Merge::parallel(Channels &a, Channels &b)
+{
+	unifySamplerate(a,b);
+	Channels target(a);
+	for(unsigned i=0;i<a.size();i++)
+		for(unsigned j=0;j<a[i].size();j++)
+			target[i][j]=a[i][j]+b[i][j];
+
+	return target;
+}
+
 
 int Merge::unifySamplerate(Channels &a,Channels &b)
 {

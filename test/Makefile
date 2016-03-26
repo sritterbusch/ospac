@@ -1,4 +1,5 @@
 all:	volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
+	intro-normalized-space.wav \
 	intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav multi-test.wav \
 	ligo-raw.wav ligo-filter.wav ligo-event.wav
@@ -152,4 +153,12 @@ ligo-event.wav: ../Release/ospac H-H1_LOSC_4_V1-1126259446-32.txt L-L1_LOSC_4_V1
 	-pnmscale .5 < ligo-event.ppm|pnmtopng > ligo-event.png && mv ligo-event.png ../images
 	-rm ligo-event.ppm
 	-lame -V1 -q0 --lowpass 22050 --resample 44100 ligo-event.wav ligo-event.mp3 && mv ligo-event.mp3 ../examples/
-	
+
+space-44s.wav: Makefile
+	 sox -n -r44100 -c1 -t wav space-44s.wav synth whitenoise band -n 100 20 band -n 50 20 gain +30 fade h 1 44 1
+
+intro-normalized-space.wav:	intro-cooking-math-4.wav space-44s.wav ../Release/ospac
+	../Release/ospac --stereo --mix --normalize intro-cooking-math-4.wav --parallel --mix space-44s.wav --factor 0.5 --output intro-normalized-space.wav
+	-../Release/ospac --raw intro-cooking-math-4.wav intro-normalized-space.wav --plot normalize-space-result.ppm
+	-pnmscale .5 < normalize-space-result.ppm | pnmtopng  > normalize-space-result.png && mv normalize-space-result.png ../images/
+	-rm normalize-space-result.ppm

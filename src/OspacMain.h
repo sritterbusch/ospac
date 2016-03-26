@@ -55,7 +55,7 @@ protected:
 	/**
 	 * Transition mode between acoustic data segments
 	 */
-	enum TransitionMode { NONE, OVERLAP, FADE, MaxTransitionMode};
+	enum TransitionMode { NONE, OVERLAP, FADE, PARALLEL, MaxTransitionMode};
 
 	/**
 	 * Downmix mode for current acoustic data segment

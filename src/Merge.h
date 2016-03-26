@@ -38,6 +38,14 @@ public:
 	 */
 	static Channels fade(Channels &a,Channels &b,float sec);
 
+	/**
+	 * Render two channel segments in parallel
+	 * @param a first sound data segment
+	 * @param b second sound data segment
+	 * @return resulting faded sound data segment
+	 */
+	static Channels parallel(Channels &a,Channels &b);
+
 private:
 	static int    unifySamplerate(Channels &a,Channels &b);
 
