@@ -60,7 +60,7 @@ intro-xgate.wav:	intro-normalized.wav intro-reverb-only.wav ../Release/ospac
 	-rm xgate-result.ppm
 
 stereo-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output stereo-test.wav
+	../Release/ospac 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output stereo-test.wav
 	../Release/ospac --raw stereo-test.wav --plot stereo-test.ppm
 	../Release/ospac --raw --mono --normalize stereo-test.wav --output stereo-test-mono.wav
 	-pnmscale .5 < stereo-test.ppm|pnmtopng > stereo-test.png && mv stereo-test.png ../images/
@@ -69,7 +69,7 @@ stereo-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-rm stereo-test.ppm
 	
 stereo-strong.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --set-stereo-level 0.25 {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output stereo-strong.wav --plot stereo-strong.ppm
+	../Release/ospac --set-stereo-level 0.25 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output stereo-strong.wav --plot stereo-strong.ppm
 	../Release/ospac --raw stereo-strong.wav --plot stereo-strong.ppm
 	../Release/ospac --raw --mono --normalize stereo-strong.wav --output stereo-strong-mono.wav
 	-pnmscale .5 < stereo-strong.ppm|pnmtopng > stereo-strong.png && mv stereo-strong.png ../images/
@@ -78,7 +78,7 @@ stereo-strong.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-rm stereo-strong.ppm
 	
 spatial-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --spatial {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output spatial-test.wav
+	../Release/ospac --spatial 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output spatial-test.wav
 	../Release/ospac --raw spatial-test.wav --plot spatial-test.ppm
 	../Release/ospac --raw --mono --normalize spatial-test.wav --output spatial-test-mono.wav
 	-pnmscale .5 < spatial-test.ppm|pnmtopng > spatial-test.png && mv spatial-test.png ../images/
@@ -87,7 +87,7 @@ spatial-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-rm spatial-test.ppm
 
 spatial-strong.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --spatial --set-stereo-spatial 0.2 {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output spatial-strong.wav
+	../Release/ospac --spatial --set-stereo-spatial 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output spatial-strong.wav
 	../Release/ospac --raw spatial-strong.wav --plot spatial-strong.ppm
 	../Release/ospac --raw --mono --normalize spatial-strong.wav --output spatial-strong-mono.wav
 	-pnmscale .5 < spatial-strong.ppm|pnmtopng > spatial-strong.png && mv spatial-strong.png ../images/
@@ -96,21 +96,21 @@ spatial-strong.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-rm spatial-strong.ppm
 
 stereo-mono-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --set-stereo-level 1 {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output stereo-mono-test.wav
+	../Release/ospac --set-stereo-level 1 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output stereo-mono-test.wav
 	../Release/ospac --raw stereo-mono-test.wav --plot stereo-mono-test.ppm
 	-pnmscale .5 < stereo-mono-test.ppm|pnmtopng > stereo-mono-test.png && mv stereo-mono-test.png ../images/
 	-lame -V8.5 -q0 --lowpass 22050 --resample 44100 stereo-mono-test.wav stereo-mono-test.mp3 && mv stereo-mono-test.mp3 ../examples/
 	-rm stereo-mono-test.ppm
 	
 mono-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --mono {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output mono-test.wav
+	../Release/ospac --mono 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output mono-test.wav
 	../Release/ospac --raw mono-test.wav --plot mono-test.ppm
 	-pnmscale .5 < mono-test.ppm|pnmtopng > mono-test.png && mv mono-test.png ../images/
 	-lame -V8.5 -q0 --lowpass 22050 --resample 44100 mono-test.wav mono-test.mp3 && mv mono-test.mp3 ../examples/
 	-rm mono-test.ppm
 
 multi-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --multi {1,2,3,4,5}.wav --voice {5,4,3,2,1}.wav --output multi-test.wav
+	../Release/ospac --multi 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output multi-test.wav
 	../Release/ospac --raw multi-test.wav --plot multi-test.ppm
 	-pnmscale .5 < multi-test.ppm|pnmtopng > multi-test.png && mv multi-test.png ../images/
 	-rm multi-test.ppm
