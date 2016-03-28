@@ -553,6 +553,14 @@ int OspacMain::run(void)
 			{
 				nextTransitionMode=PARALLEL;
 				LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
+				if(noise)
+				{
+					LOG(logWARNING) << "WARNING: The --noise filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
+				}
+				if(skip)
+				{
+					LOG(logWARNING) << "WARNING: The --skip filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
+				}
 			} else
 			if(arg[i]=="factor")
 			{
@@ -613,10 +621,20 @@ int OspacMain::run(void)
 			if(arg[i]=="noise")
 			{
 				noise=true;
+				if(nextTransitionMode==PARALLEL
+				|| transitionMode==PARALLEL)
+				{
+					LOG(logWARNING) << "WARNING: The --noise filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
+				}
 			} else
 			if(arg[i]=="skip")
 			{
 				skip=true;
+				if(nextTransitionMode==PARALLEL
+				|| transitionMode==PARALLEL)
+				{
+					LOG(logWARNING) << "WARNING: The --skip filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
+				}
 			} else
 			if(arg[i]=="no-skip")
 			{

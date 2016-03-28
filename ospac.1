@@ -70,7 +70,12 @@ seconds
 .IP "--parallel"
 Render the previous and next segment in parallel. By this, you can have
 independent processing for parallel audio channels. For example, for music
-or noise channels.  
+or noise channels. Be aware, that filters such as
+.I --skip
+or 
+.I --noise
+will most likely generate out-of-sync audio as the cuts are not synchronized 
+between parallel segments.
 
 .SH "CROSSTALK FILTER OPTIONS"
 .IP --xgate
