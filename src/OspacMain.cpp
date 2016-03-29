@@ -25,6 +25,7 @@
 #include "Plot.h"
 #include "Frequency.h"
 #include "Analyzer.h"
+#include "Encode.h"
 #include <stdlib.h>
 
 
@@ -343,7 +344,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
 							  "bandpass","analyze",
-							  "output",
+							  "output","mp3",
 							  "help","verbosity","plot"};
 
 int OspacMain::run(void)
@@ -374,6 +375,7 @@ int OspacMain::run(void)
 				std::cout << "  --multi         Create multi channel output" << std::endl;
 				std::cout << "  --mono          Create mono output" << std::endl;
 				std::cout << "  --output [file] Write final output to [file] in wave format" << std::endl;
+				std::cout << "  --mp3 [file]    Write final output to [file] using external lame" << std::endl;
 				std::cout << std::endl;
 				std::cout << "  --set-stereo-level [n]  Set maximum channel volume factor (0.9)" << std::endl;
 				std::cout << "  --set-stereo-spatial [n] Set maximum interaural delay distance (0.03)" << std::endl;
@@ -717,6 +719,18 @@ int OspacMain::run(void)
 					LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
 
 					Wave::save(arg[i],temp);
+				}
+			} else
+			if(arg[i]=="mp3")
+			{
+				Channels temp;
+				render(work,operand,temp);
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+
+					Encode::lame(temp,arg[i],Encode::STANDARD, "","","","","","","","");
 				}
 			} else
 			if(arg[i]=="analyze")

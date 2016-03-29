@@ -8,6 +8,7 @@ CPP_SRCS += \
 ../src/Channel.cpp \
 ../src/CrosstalkFilter.cpp \
 ../src/CrosstalkGate.cpp \
+../src/Encode.cpp \
 ../src/Equalizer.cpp \
 ../src/Frequency.cpp \
 ../src/Log.cpp \
@@ -27,6 +28,7 @@ OBJS += \
 ./src/Channel.o \
 ./src/CrosstalkFilter.o \
 ./src/CrosstalkGate.o \
+./src/Encode.o \
 ./src/Equalizer.o \
 ./src/Frequency.o \
 ./src/Log.o \
@@ -46,6 +48,7 @@ CPP_DEPS += \
 ./src/Channel.d \
 ./src/CrosstalkFilter.d \
 ./src/CrosstalkGate.d \
+./src/Encode.d \
 ./src/Equalizer.d \
 ./src/Frequency.d \
 ./src/Log.d \
