@@ -93,3 +93,75 @@ int Encode::lame(Channels &c,
 
 	return result;
 }
+
+
+
+int Encode::oggenc(Channels &c,
+					std::string filename,
+					Quality quality,
+					std::string title,
+					std::string artist,
+					std::string album,
+					std::string comment,
+					std::string category,
+					std::string episode)
+{
+
+	if(c.size()<1)
+		return 0;
+
+	std::string tempfile=filename+".wav";
+
+	Wave::save(tempfile,c);
+
+	unsigned rate=c[0].samplerate();
+	if(rate>44100)
+		rate=44100;
+
+	unsigned halfrate=rate/2;
+
+	std::string Vrate="2";
+	switch(quality)
+	{
+	case LOW:
+		Vrate="1";
+		break;
+	case STANDARD:
+		Vrate="2";
+		break;
+	case HIGH:
+		Vrate="4";
+		break;
+	case INSANE:
+		Vrate="6";
+		break;
+	}
+
+	std::stringstream stream;
+
+	stream << "oggenc -q" << Vrate
+		   << " --advanced-encode-option lowpass_frequency="<< halfrate;
+
+	if(title!="")
+		stream << " -t \""<<title<<"\"";
+	if(artist!="")
+		stream << " -a \""<<artist<<"\"";
+	if(comment!="")
+		stream << " -d \""<<comment<<"\"";
+	if(album!="")
+		stream << " -l \""<<album<<"\"";
+	if(category!="")
+		stream << " -G \""<<category<<"\"";
+	if(episode!="")
+		stream << " -N \""<<episode<<"\"";
+
+	stream << " "<<tempfile<<" -o "<<filename;
+
+	LOG(logINFO) << stream.str() << std::endl;
+
+	unsigned result=system(stream.str().c_str());
+
+	unlink(tempfile.c_str());
+
+	return result;
+}
