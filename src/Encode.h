@@ -21,7 +21,56 @@
 class Encode
 {
 public:
-	enum Quality { LOW, STANDARD, HIGH, INSANE};
+	enum QualitySetting { LOW, STANDARD, HIGH, INSANE};
+private:
+	Channels    &channels;
+	std::string title;
+	std::string artist;
+	std::string album;
+	std::string comment;
+	std::string category;
+	std::string episode;
+	std::string year;
+	std::string image;
+	QualitySetting     quality;
+
+public:
+	Encode(Channels &aChannels)
+		: channels(aChannels),
+		  title(""),artist(""),album(""),
+		  comment("Encoded by ospac.net"),
+		  category("Speech"),episode(""),
+		  year(""),image(""),
+		  quality(STANDARD)
+	{
+
+	}
+
+	Encode & Title(std::string aTitle) { title=aTitle; return *this; }
+	Encode & Artist(std::string aArtist) { artist=aArtist; return *this; }
+	Encode & Album(std::string aAlbum) { album=aAlbum; return *this; }
+	Encode & Comment(std::string aComment) { comment=aComment; return *this; }
+	Encode & Category(std::string aCategory) { category=aCategory; return *this; }
+	Encode & Episode(std::string aEpisode) { episode=aEpisode; return *this; }
+	Encode & Year(std::string aYear) { year=aYear; return *this; }
+	Encode & Image(std::string aImage) { image=aImage; return *this; }
+	Encode & Quality(QualitySetting aQuality) { quality=aQuality; return *this; }
+
+	int    mp3(std::string filename)
+	{
+		return lame(channels,filename,quality,title,artist,album,comment,
+				image,category,episode,year);
+
+	}
+
+	int    ogg(std::string filename)
+	{
+		return oggenc(channels,filename,quality,title,artist,album,comment,
+					  category,episode);
+
+	}
+
+protected:
 
 	/**
 	 * Encode given audio segment to mp3 using an external lame encoder
@@ -40,7 +89,7 @@ public:
 	 */
 	static int lame(Channels &c,
 					std::string filename,
-					Quality quality,
+					QualitySetting quality,
 					std::string title,
 					std::string artist,
 					std::string album,
@@ -65,7 +114,7 @@ public:
 	 */
 	static int oggenc(Channels &c,
 					std::string filename,
-					Quality quality,
+					QualitySetting quality,
 					std::string title,
 					std::string artist,
 					std::string album,

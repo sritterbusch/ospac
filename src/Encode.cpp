@@ -17,7 +17,7 @@
 
 int Encode::lame(Channels &c,
 					std::string filename,
-					Quality quality,
+					QualitySetting quality,
 					std::string title,
 					std::string artist,
 					std::string album,
@@ -98,7 +98,7 @@ int Encode::lame(Channels &c,
 
 int Encode::oggenc(Channels &c,
 					std::string filename,
-					Quality quality,
+					QualitySetting quality,
 					std::string title,
 					std::string artist,
 					std::string album,

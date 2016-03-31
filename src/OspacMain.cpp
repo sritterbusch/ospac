@@ -731,7 +731,11 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					Encode::lame(temp,arg[i],Encode::STANDARD, "","","","","","","","");
+					int result=Encode(temp).mp3(arg[i]);
+					if(result)
+					{
+						LOG(logDEBUG) << "Encoding failed with error code " << result;
+					}
 				}
 			} else
 			if(arg[i]=="ogg")
@@ -743,7 +747,12 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					Encode::oggenc(temp,arg[i],Encode::STANDARD, "","","","","","");
+					int result=Encode(temp).ogg(arg[i]);
+					if(result)
+					{
+						LOG(logDEBUG) << "Encoding failed with error code " << result;
+					}
+
 				}
 			} else
 			if(arg[i]=="analyze")
