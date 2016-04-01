@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "Channel.h"
+#include "Encode.h"
 
 /**
  * @brief Main program class for dealing with command line options
@@ -176,6 +177,51 @@ protected:
 	 * Current setting for maximal seconds to load
 	 */
 	float   loadMaxSeconds;
+
+	/**
+	 * Encoding meta tag title
+	 */
+	std::string title;
+
+	/**
+	 * Encoding meta tag artist
+	 */
+	std::string artist;
+
+	/**
+	 * Encoding meta tag album
+	 */
+	std::string album;
+
+	/**
+	 * Encoding meta tag comment
+	 */
+	std::string comment;
+
+	/**
+	 * Encoding meta tag category
+	 */
+	std::string category;
+
+	/**
+	 * Encoding meta tag episode
+	 */
+	std::string episode;
+
+	/**
+	 * Encoding meta tag year
+	 */
+	std::string year;
+
+	/**
+	 * Encoding meta tag image
+	 */
+	std::string image;
+
+	/**
+	 * Encoding quality setting
+	 */
+	Encode::QualitySetting     quality;
 
 	/**
 	 * Set all variables to their standard setting dependent on data mode

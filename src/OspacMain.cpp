@@ -247,7 +247,12 @@
 
 
 
-OspacMain::OspacMain(std::vector<std::string> aArg) : arg(aArg)
+OspacMain::OspacMain(std::vector<std::string> aArg) : arg(aArg),
+		  title(""),artist(""),album(""),
+		  comment("Encoded by ospac.net"),
+		  category("Speech"),episode(""),
+		  year(""),image(""),
+		  quality(Encode::STANDARD)
 {
 	mixMode=STEREO;
 	argMode=VOICE;
@@ -345,6 +350,9 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "eqvoice","no-eqvoice",
 							  "bandpass","analyze",
 							  "output","mp3","ogg",
+							  "title","artist","album",
+							  "comment","category","episode",
+							  "year","image","quality",
 							  "help","verbosity","plot"};
 
 int OspacMain::run(void)
@@ -731,7 +739,15 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					int result=Encode(temp).mp3(arg[i]);
+					int result=Encode(temp)
+									.Title(title)
+									.Artist(artist)
+									.Comment(comment)
+									.Album(album)
+									.Episode(episode)
+									.Year(year)
+									.Image(image)
+									.mp3(arg[i]);
 					if(result)
 					{
 						LOG(logDEBUG) << "Encoding failed with error code " << result;
@@ -747,12 +763,92 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					int result=Encode(temp).ogg(arg[i]);
+					int result=Encode(temp)
+									.Title(title)
+									.Artist(artist)
+									.Comment(comment)
+									.Album(album)
+									.Episode(episode)
+									.Year(year)
+									.Image(image)
+									.ogg(arg[i]);
 					if(result)
 					{
 						LOG(logDEBUG) << "Encoding failed with error code " << result;
 					}
 
+				}
+			} else
+			if(arg[i]=="title")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					title=arg[i];
+				}
+			} else
+			if(arg[i]=="artist")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					artist=arg[i];
+				}
+			} else
+			if(arg[i]=="album")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					album=arg[i];
+				}
+			} else
+			if(arg[i]=="comment")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					comment=arg[i];
+				}
+			} else
+			if(arg[i]=="category")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					category=arg[i];
+				}
+			} else
+			if(arg[i]=="episode")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					episode=arg[i];
+				}
+			} else
+			if(arg[i]=="year")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					year=arg[i];
+				}
+			} else
+			if(arg[i]=="image")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					image=arg[i];
 				}
 			} else
 			if(arg[i]=="analyze")
