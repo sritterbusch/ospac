@@ -485,37 +485,43 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="plot")
 			{
-				Channels temp;
-				render(work,operand,temp);
+				if(target.size()==0)
+					render(work,operand,target);
+
 				if(i+1<arg.size())
 				{
 					i++;
-					Plot::createPPMPlot(temp,arg[i]);
+					Plot::createPPMPlot(target,arg[i]);
 				} else
-					Plot::createPPMPlot(temp,"output.pgm");
+					Plot::createPPMPlot(target,"output.pgm");
 			} else
 			if(arg[i]=="spatial")
 			{
 				LOG(logDEBUG) << "Setting mixMode to SPATIAL" << std::endl;
 				mixMode=SPATIAL;
+				target=Channels();
 			} else
 			if(arg[i]=="stereo")
 			{
 				LOG(logDEBUG) << "Setting mixMode to STEREO" << std::endl;
 				mixMode=STEREO;
+				target=Channels();
 			} else
 			if(arg[i]=="mono")
 			{
 				LOG(logDEBUG) << "Setting mixMode to MONO" << std::endl;
 				mixMode=MONO;
+				target=Channels();
 			} else
 			if(arg[i]=="multi")
 			{
 				LOG(logDEBUG) << "Setting mixMode to MULTI" << std::endl;
 				mixMode=MULTI;
+				target=Channels();
 			} else
 			if(arg[i]=="voice")
 			{
+				target=Channels();
 				render(work,operand,operand);
 				argMode=VOICE;
 				LOG(logDEBUG) << "Next segment type VOICE" << std::endl;
@@ -524,6 +530,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="mix")
 			{
+				target=Channels();
 				render(work,operand,operand);
 				argMode=MIX;
 				LOG(logDEBUG) << "Next segment type MIX" << std::endl;
@@ -532,6 +539,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="raw")
 			{
+				target=Channels();
 				render(work,operand,operand);
 				argMode=RAW;
 				LOG(logDEBUG) << "Next segment type RAW" << std::endl;
@@ -540,6 +548,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="fade")
 			{
+				target=Channels();
 				nextTransitionMode=FADE;
 				if(i+1<arg.size())
 				{
@@ -551,6 +560,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="overlap")
 			{
+				target=Channels();
 				nextTransitionMode=OVERLAP;
 				if(i+1<arg.size())
 				{
@@ -562,6 +572,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="parallel")
 			{
+				target=Channels();
 				nextTransitionMode=PARALLEL;
 				LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
 				if(noise)
@@ -575,6 +586,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="factor")
 			{
+				target=Channels();
 				if(i+1<arg.size())
 				{
 					i++;
@@ -584,10 +596,12 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="no-factor")
 			{
+				target=Channels();
 				maximizer=0;
 			}else
 			if(arg[i]=="set-stereo-level")
 			{
+				target=Channels();
 				if(i+1<arg.size())
 				{
 					i++;
@@ -597,6 +611,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="set-stereo-spatial")
 			{
+				target=Channels();
 				if(i+1<arg.size())
 				{
 					i++;
@@ -606,14 +621,17 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="leveler")
 			{
+				target=Channels();
 				leveler=true;
 			} else
 			if(arg[i]=="no-leveler")
 			{
+				target=Channels();
 				leveler=false;
 			} else
 			if(arg[i]=="target")
 			{
+				target=Channels();
 				if(i+1<arg.size())
 				{
 					i++;
@@ -623,14 +641,17 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="normalize")
 			{
+				target=Channels();
 				normalizer=true;
 			} else
 			if(arg[i]=="no-normalize")
 			{
+				target=Channels();
 				normalizer=false;
 			} else
 			if(arg[i]=="noise")
 			{
+				target=Channels();
 				noise=true;
 				if(nextTransitionMode==PARALLEL
 				|| transitionMode==PARALLEL)
@@ -640,6 +661,7 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="skip")
 			{
+				target=Channels();
 				skip=true;
 				if(nextTransitionMode==PARALLEL
 				|| transitionMode==PARALLEL)
@@ -649,10 +671,12 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="no-skip")
 			{
+				target=Channels();
 				skip=false;
 			} else
 			if(arg[i]=="skip-level")
 			{
+				target=Channels();
 				if(i+1<arg.size())
 				{
 					i++;
@@ -667,34 +691,44 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 					skipOrder=atof(arg[i].c_str());
+					target=Channels();
 				}
 			} else
 			if(arg[i]=="xgate")
 			{
+				target=Channels();
 				xGate=true;
 			} else
 			if(arg[i]=="no-xgate")
 			{
+				target=Channels();
 				xGate=false;
 			} else
 			if(arg[i]=="xfilter")
 			{
+				target=Channels();
 				xFilter=true;
 			} else
 			if(arg[i]=="no-xfilter")
 			{
+				target=Channels();
 				xFilter=false;
 			} else
 			if(arg[i]=="eqvoice")
 			{
+				target=Channels();
 				voiceEq=true;
 			} else
 			if(arg[i]=="no-eqvoice")
 			{
+				target=Channels();
+
 				voiceEq=false;
 			} else
 			if(arg[i]=="bandpass")
 			{
+				target=Channels();
+
 				if(i+1<arg.size())
 				{
 					i++;
@@ -719,27 +753,28 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="output")
 			{
-				Channels temp;
-				render(work,operand,temp);
+				if(target.size()==0)
+					render(work,operand,target);
 				if(i+1<arg.size())
 				{
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 					LOG(logDEBUG) << "nextMode: " << nextTransitionMode << " Mode: " << transitionMode << std::endl;
 
-					Wave::save(arg[i],temp);
+					Wave::save(arg[i],target);
 				}
 			} else
 			if(arg[i]=="mp3")
 			{
-				Channels temp;
-				render(work,operand,temp);
+				if(target.size()==0)
+					render(work,operand,target);
+
 				if(i+1<arg.size())
 				{
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					int result=Encode(temp)
+					int result=Encode(target)
 									.Title(title)
 									.Artist(artist)
 									.Comment(comment)
@@ -756,14 +791,15 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="ogg")
 			{
-				Channels temp;
-				render(work,operand,temp);
+				if(target.size()==0)
+					render(work,operand,target);
+
 				if(i+1<arg.size())
 				{
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 
-					int result=Encode(temp)
+					int result=Encode(target)
 									.Title(title)
 									.Artist(artist)
 									.Comment(comment)
@@ -853,13 +889,16 @@ int OspacMain::run(void)
 			} else
 			if(arg[i]=="analyze")
 			{
-				Channels temp;
-				render(work,operand,temp);
-				for(unsigned c=0;c<temp.size();c++)
-					Analyzer::bandedAnalysis(temp[c]);
+				if(target.size()==0)
+					render(work,operand,target);
+
+				for(unsigned c=0;c<target.size();c++)
+					Analyzer::bandedAnalysis(target[c]);
 			} else
 			if(arg[i]=="ascii")
 			{
+				target=Channels();
+
 				int samplerate=44100;
 				if(i+1<arg.size())
 				{
@@ -885,6 +924,7 @@ int OspacMain::run(void)
 			}
 		} else
 		{
+			target=Channels();
 			unsigned before=work.size();
 			Wave::load(arg[i],work,loadSkipSeconds,loadMaxSeconds);
 			if(work.size()==before)

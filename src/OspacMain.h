@@ -297,6 +297,12 @@ public:
 	 * @return 0 in case of success, 1 in case of error.
 	 */
 	int run(void);
+
+private:
+	/**
+	 * target cache
+	 */
+	Channels target;
 };
 
 #endif /* OSPACMAIN_H_ */
