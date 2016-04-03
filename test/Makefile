@@ -87,7 +87,7 @@ spatial-test.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
 	-rm spatial-test.ppm
 
 spatial-strong.wav:	1.wav 2.wav 3.wav 4.wav 5.wav ../Release/ospac
-	../Release/ospac --spatial --set-stereo-spatial 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output spatial-strong.wav
+	../Release/ospac --spatial --set-stereo-spatial 0.2 1.wav 2.wav 3.wav 4.wav 5.wav --voice 5.wav 4.wav 3.wav 2.wav 1.wav --output spatial-strong.wav
 	../Release/ospac --raw spatial-strong.wav --plot spatial-strong.ppm
 	../Release/ospac --raw --mono --normalize spatial-strong.wav --output spatial-strong-mono.wav
 	-pnmscale .5 < spatial-strong.ppm|pnmtopng > spatial-strong.png && mv spatial-strong.png ../images/
