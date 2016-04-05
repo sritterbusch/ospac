@@ -21,6 +21,9 @@
 class Encode
 {
 public:
+	/**
+	 * General quality setting for all encoding formats
+	 */
 	enum QualitySetting { LOW, STANDARD, HIGH, INSANE};
 private:
 	Channels    &channels;
@@ -35,6 +38,10 @@ private:
 	QualitySetting     quality;
 
 public:
+	/**
+	 * Builder pattern constructor from channels to encode.
+	 * @param aChannels
+	 */
 	Encode(Channels &aChannels)
 		: channels(aChannels),
 		  title(""),artist(""),album(""),
@@ -46,16 +53,66 @@ public:
 
 	}
 
+	/**
+	 * Set title meta tag of encoded file to given title
+	 * @param aTitle title to be set
+	 * @return modified builder object
+	 */
 	Encode & Title(std::string aTitle) { title=aTitle; return *this; }
+	/**
+	 * set artist meta tag of encoded file to given artist
+	 * @param aArtist artist to be set
+	 * @return modified builder object
+	 */
 	Encode & Artist(std::string aArtist) { artist=aArtist; return *this; }
+	/**
+	 * set album meta tag of encoded file to given album
+	 * @param aAlbum album to be set
+	 * @return modified builder object
+	 */
 	Encode & Album(std::string aAlbum) { album=aAlbum; return *this; }
+	/**
+	 * set comment meta tag of encoded file to given comment
+	 * @param aComment comment to be set
+	 * @return modified builder object
+	 */
 	Encode & Comment(std::string aComment) { comment=aComment; return *this; }
+	/**
+	 * set category meta tag of encoded file to given category
+	 * @param aCategory category to be set
+	 * @return modified builder object
+	 */
 	Encode & Category(std::string aCategory) { category=aCategory; return *this; }
+	/**
+	 * set episode meta tag of encoded file to given episode
+	 * @param aEpisode episode to be set
+	 * @return modified builder object
+	 */
 	Encode & Episode(std::string aEpisode) { episode=aEpisode; return *this; }
+	/**
+	 * set year meta tag of encoded file to given year
+	 * @param aYear year to be set
+	 * @return modified builder object
+	 */
 	Encode & Year(std::string aYear) { year=aYear; return *this; }
+	/**
+	 * set image meta tag of encoded file to given image if possible
+	 * @param aImage image to be set
+	 * @return modified builder object
+	 */
 	Encode & Image(std::string aImage) { image=aImage; return *this; }
+	/**
+	 * set quality of encoding to given meta value
+	 * @param aQuality quality meta value to be used
+	 * @return modified builder object
+	 */
 	Encode & Quality(QualitySetting aQuality) { quality=aQuality; return *this; }
 
+	/**
+	 * Create mp3 file from builder
+	 * @param filename under which the encoded file shall be saved
+	 * @return return value of external command
+	 */
 	int    mp3(std::string filename)
 	{
 		return lame(channels,filename,quality,title,artist,album,comment,
@@ -63,6 +120,11 @@ public:
 
 	}
 
+	/**
+	 * Create ogg file from builder
+	 * @param filename under which the encoded file shall be saved
+	 * @return return value of external command
+	 */
 	int    ogg(std::string filename)
 	{
 		return oggenc(channels,filename,quality,title,artist,album,comment,

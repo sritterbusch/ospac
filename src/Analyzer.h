@@ -33,7 +33,6 @@ public:
 	 * Analysis of frequency band distribution if activity is detected
 	 * for fixed cut-off frequencies 100Hz, 500Hz, 2.5k, 4k
 	 * @param c				audio channel to work on
-	 * @param frequencies	n cut-off frequencies
 	 * @return resulting l2 normalized n+1 l2 energy levels
 	 */
 	static std::vector<double> bandedAnalysis(const Channel & c);
