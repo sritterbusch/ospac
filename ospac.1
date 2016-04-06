@@ -34,10 +34,6 @@ Create a mono output.
 .IP --multi
 Create a multichannel file where each first and further channels in 
 each input phases are mixed to each other
-.IP "--output [file]"
-Write final output to 
-.I [file]
-in wave format
 .IP "--set-stereo-level [n]"
 Set maximum volume factor for stereo and spatial mode (0.9) - 
 the lower the stronger the effect is
@@ -45,10 +41,62 @@ the lower the stronger the effect is
 Set maximum inter-aural delay distance in meter in spatial mode (0.03) -
 the higher the stronger - the average distance between human ears are 
 0.22 (meter) so you probably should not go above that limit
+
+.SH "OUTPUT TARGETS"
+.IP "--output [file]"
+Write final output to 
+.I [file]
+in wave format
+.IP "--mp3 [file]"
+Write final output to 
+.I [file]
+in mp3 format using the external
+.B lame
+command which has to be in the path
+.IP "--ogg [file]"
+Write final output to 
+.I [file]
+in ogg format using the external
+.B oggenc
+command which has to be in the path
 .IP "--plot [file]"
 Write a wave form image to
 .I [file]
 in netpbm PPM format
+
+.SH "OUTPUT META DATA"
+.IP "--title [text]"
+Set title tag to 
+.I [text]
+if this exists in output
+.IP "--artist [text]"
+Set artist tag to 
+.I [text] 
+if this exists in output
+.IP "--album [text]"
+Set album tag to
+.I [text]
+if this exists in output
+.IP "--comment [text]"
+Set comment tag to 
+.I [text]
+if this exists in output
+.IP "--category [text]"
+Set category tag to 
+.I [text]
+if this exists in output
+.IP "--episode [text]"
+Set episode tag to 
+.I [text]
+if this exists in output
+.IP "--year [text]"
+Set year tag to 
+.I [text]
+if this exists in output
+.IP "--image [file]"
+Set image tag to
+.I [file]
+if this exists in output
 
 .SH "NEW SEGMENT OPTIONS"
 .IP --voice
@@ -192,7 +240,7 @@ Mix podcast with stereo intro and outro:
 .PP
 .nf
 .RS
-  ospac -mi in.wav -ov 4 -v person1.wav person2.wav -ov 4 -mi -ot target.wav
+  ospac -mi in.wav -ov 4 -vo person1.wav person2.wav -ov 4 -mi out.wav -out target.wav
 .RE
 .fi
 .PP
@@ -209,4 +257,4 @@ Mix podcast with stereo intro and outro:
 .SH AUTHOR
 Sebastian Ritterbusch <ospac at ritterbusch dot de>
 .SH "SEE ALSO"
-.BR sox (1)
+.BR sox (1), lame (1), oggenc (1), pnmtopng (1), ppm (5)
