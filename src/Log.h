@@ -27,7 +27,7 @@
  * that computes the right hand side only if the logging level is reached.
  *
  * Example:
- * 	LOG(logDEBUG) << "test information " << expensiveFunkction << std::endl;
+ * 	LOG(logDEBUG) << "test information " << expensiveFunction << std::endl;
  * expands to
  *  if(logDEBUG > LOG::getLoglevel())
  *  	; // do nothing
