@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <sstream>
 
+
 #include "Encode.h"
 #include "Wave.h"
 #include "Log.h"
@@ -83,7 +84,7 @@ int Encode::lame(Channels &c,
 	if(episode!="")
 		stream << " --tn \""<<episode<<"\"";
 
-	stream << " "<<tempfile<<" "<<filename;
+	stream << " \""<<tempfile<<"\" \""<<filename<<"\"";
 
 	LOG(logINFO) << stream.str() << std::endl;
 
@@ -155,7 +156,7 @@ int Encode::oggenc(Channels &c,
 	if(episode!="")
 		stream << " -N \""<<episode<<"\"";
 
-	stream << " "<<tempfile<<" -o "<<filename;
+	stream << " \""<<tempfile<<"\" -o \""<<filename<<"\"";
 
 	LOG(logINFO) << stream.str() << std::endl;
 

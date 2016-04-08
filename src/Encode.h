@@ -10,7 +10,7 @@
 #ifndef ENCODE_H_
 #define ENCODE_H_
 
-#include <String>
+#include <string>
 
 #include "Channel.h"
 
