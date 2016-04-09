@@ -39,10 +39,11 @@ std::ostream & Log::Get(std::string file,int line,TLogLevel level)
 	if(showFunction)
 	{
 		char number[20];
-		std::string spaces="                         ";
 		sprintf(number,"%d",line);
 		std::string target=file.substr(7)+":"+number;
-		target+=spaces.substr(target.size());
+		if(target.size()<30)
+			target.insert(target.size(), 30-target.size(),' ');
+
 
 		(*o) << std::setw(25) << target << "\t";
 	}
