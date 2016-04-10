@@ -338,7 +338,7 @@ OspacMain::~OspacMain()
 std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "set-stereo-level","set-stereo-spatial",
 							  "voice","mix","raw",
-							  "ascii",
+							  "ascii","left","right","tomono",
 							  "fade","overlap","parallel",
 							  "factor", "no-factor",
 							  "leveler","no-leveler","target",
@@ -440,6 +440,9 @@ int OspacMain::run(void)
 				std::cout << std::endl;
 				std::cout << " Import audio:" << std::endl;
 				std::cout << "  [file]          Load wave file" << std::endl;
+				std::cout << "  --left [file]   Load left channel of wave file (if stereo)" << std::endl;
+				std::cout << "  --right [file]  Load right channel of wave file (if stereo)" << std::endl;
+				std::cout << "  --tomono [file] Load mono-mixdown of wave file (if stereo)" << std::endl;
 				std::cout << "  --ascii [s] [file] Load ascii wave file with sample rate s" << std::endl;
 				std::cout << std::endl;
 				std::cout << "Examples:" << std::endl;
@@ -931,6 +934,51 @@ int OspacMain::run(void)
 					}
 				}
 
+			} else
+			if(arg[i]=="left")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					target=Channels();
+					Channels temp;
+					Wave::load(arg[i],temp,loadSkipSeconds,loadMaxSeconds);
+					if(temp.size()>=1)
+						work.push_back(temp[0]);
+				}
+			} else
+			if(arg[i]=="right")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					target=Channels();
+					Channels temp;
+					Wave::load(arg[i],temp,loadSkipSeconds,loadMaxSeconds);
+					if(temp.size()==1)
+						work.push_back(temp[0]);
+					if(temp.size()>1)
+						work.push_back(temp[1]);
+
+				}
+			} else
+			if(arg[i]=="tomono")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					target=Channels();
+					Channels temp;
+					Wave::load(arg[i],temp,loadSkipSeconds,loadMaxSeconds);
+					if(temp.size()==1)
+						work.push_back(temp[0]);
+					if(temp.size()>1)
+					{
+						MonoMix mix;
+						mix.mix(temp);
+						work.push_back(mix.getTarget()[0]);
+					}
+				}
 			} else
 			{
 				LOG(logERROR) << "command line option " << arg[i] << " was not recognized." << std::endl;
