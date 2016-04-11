@@ -206,6 +206,18 @@ specifies the quality of the filter in Hertz of transition.
 Load the file 
 .I [wave file]
 and regard each channel as an individual input.
+.IP "--left [wave file]"
+Load the file
+.I [wave file]
+and only use the left channel if it was in stereo.
+.IP "--right [wave file]"
+Load the file
+.I [wave file]
+and only use the right channel if it was in stereo.
+.IP "--to-mono [wave file]"
+Load the file
+.I [wave file]
+and use a mono-mixdown of all channels in that file.
 .IP "--ascii [sample rate] [text file]"
 Load the ascii file
 .I [text file]
