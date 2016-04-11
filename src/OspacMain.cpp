@@ -338,7 +338,7 @@ OspacMain::~OspacMain()
 std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "set-stereo-level","set-stereo-spatial",
 							  "voice","mix","raw",
-							  "ascii","left","right","tomono",
+							  "ascii","left","right","to-mono",
 							  "fade","overlap","parallel",
 							  "factor", "no-factor",
 							  "leveler","no-leveler","target",
@@ -442,7 +442,7 @@ int OspacMain::run(void)
 				std::cout << "  [file]          Load wave file" << std::endl;
 				std::cout << "  --left [file]   Load left channel of wave file (if stereo)" << std::endl;
 				std::cout << "  --right [file]  Load right channel of wave file (if stereo)" << std::endl;
-				std::cout << "  --tomono [file] Load mono-mixdown of wave file (if stereo)" << std::endl;
+				std::cout << "  --to-mono [file] Load mono-mixdown of wave file (if stereo)" << std::endl;
 				std::cout << "  --ascii [s] [file] Load ascii wave file with sample rate s" << std::endl;
 				std::cout << std::endl;
 				std::cout << "Examples:" << std::endl;
@@ -962,7 +962,7 @@ int OspacMain::run(void)
 
 				}
 			} else
-			if(arg[i]=="tomono")
+			if(arg[i]=="to-mono")
 			{
 				if(i+1<arg.size())
 				{
