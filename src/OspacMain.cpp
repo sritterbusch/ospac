@@ -1143,6 +1143,8 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	}
 }
 
+#ifdef CLI
+
 /**
  * Main program entry point
  * @param argc number of arguments
@@ -1176,6 +1178,8 @@ int main(int argc,char * argv[])
 	}
 
 }
+
+#endif
 
 bool OspacMain::isOption(std::string &o)
 {
