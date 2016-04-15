@@ -140,6 +140,80 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 	return skipped;
 }
 
+float Skip::trim(Channels &a,float level)
+{
+	if(a.size()==0)
+		return 0;
+
+	unsigned len=0;
+	unsigned samplerate=0;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()>samplerate)
+			samplerate=a[c].samplerate();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()<samplerate)
+			a[c]=a[c].resampleTo(samplerate);
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()>len)
+			len=a[c].size();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()<len)
+			a[c]=a[c].resizeTo(len);
+
+	float max=0;
+
+	for(unsigned i=0;i<len;i++)
+	{
+		float sum=0;
+		for(unsigned c=0;c<a.size();c++)
+			sum+=fabs(a[c][i]);
+		if(sum>max)
+			max=sum;
+	}
+
+	level*=max;
+
+	unsigned start;
+
+	for(start=0;start<len;start++)
+	{
+		float sum=0;
+		for(unsigned c=0;c<a.size();c++)
+			sum+=fabs(a[c][start]);
+		if(sum>level)
+			break;
+	}
+
+	unsigned end;
+
+	for(end=len-1;end>=start;end--)
+	{
+		float sum=0;
+		for(unsigned c=0;c<a.size();c++)
+			sum+=fabs(a[c][end]);
+		if(sum>level)
+			break;
+	}
+	LOG(logDEBUG) << "Start: " << start << " End: "<<end << std::endl;
+
+	for(unsigned c=0;c<a.size();c++)
+	{
+		unsigned j=0;
+		for(unsigned i=start;i<=end;i++,j++)
+			a[c][j]=a[c][i];
+		a[c]=a[c].resizeTo(end-start);
+	}
+
+	LOG(logDEBUG) << "Size before: " << len << " Size after: " << a[0].size() << std::endl;
+
+	return float(end-start)/samplerate;
+}
+
+
 float Skip::noise(Channels &a,float level,float minsec,float transition)
 {
 	if(a.size()==0)

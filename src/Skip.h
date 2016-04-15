@@ -32,9 +32,19 @@ public:
 	 * @param minsec minimum time of silence before skipping is considered
 	 * @param mintransition minimum time of transition
 	 * @param reductionOrder reduction by time to the reduction order
-	 * @return
+	 * @return total seconds that were skipped
 	 */
 	static float silence(Channels &channels,float silenceLevel=0.01,float minsec=0.5,float mintransition=0.05,float reductionOrder=0.75);
+
+	/**
+	 * Trim silence in channels if absolute sum of voltages are below
+	 * silence level fraction compared to maximum level only at the beginning
+	 * or the end.
+	 * @param channels Channels where silence is to be skipped
+	 * @param silenceLevel fraction compared to maximum what is considered silence
+	 * @return total seconds that were skipped
+	 */
+	static float trim(Channels &channels,float silenceLevel=0.01);
 
     /**
 	 * Skip noise in channels if absolute sum of voltages are higher than
@@ -43,7 +53,7 @@ public:
 	 * @param silenceLevel fraction compared to maximum what is considered silence
 	 * @param minsec minimum time of silence before skipping is considered
 	 * @param transition time in seconds
-	 * @return
+	 * @return total seconds signal that was skipped
 	 */
 	static float noise(Channels &channels,float silenceLevel=0.01,float minsec=0.1,float transition=0.05);
 };
