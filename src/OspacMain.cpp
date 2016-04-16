@@ -310,6 +310,7 @@ void OspacMain::setStandard()
 	xGate=stdXGate[argMode];
 	xFilter=stdXFilter[argMode];
 	skip=stdSkip[argMode];
+	trim=false;
 	skipSilence=stdSkipSilence[argMode];
 	voiceEq=stdVoiceEq[argMode];
 
@@ -344,7 +345,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "leveler","no-leveler","target",
 							  "normalize","no-normalize",
 							  "skip","no-skip","skip-level","skip-order",
-							  "noise",
+							  "noise", "trim",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
@@ -423,6 +424,7 @@ int OspacMain::run(void)
 				std::cout << "  --skip-level    Fraction of maximum level considered silence (0.01)" << std::endl;
 				std::cout << "  --skip-order    Order of reduction (0-1, default: 0.75)" << std::endl;
 				std::cout << "  --no-skip       Do not skip any content" << std::endl;
+				std::cout << "  --trim          Trim audio from start and end" << std::endl;
 				std::cout << "  --noise         Skip all but silence" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Leveling, equalizer and normalization:" << std::endl;
@@ -600,6 +602,10 @@ int OspacMain::run(void)
 				{
 					LOG(logWARNING) << "WARNING: The --skip filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
 				}
+				if(trim)
+				{
+					LOG(logWARNING) << "WARNING: The --trim filter will yield an out-of-sync result to --parallel channels!"<<std::endl;
+				}
 			} else
 			if(arg[i]=="factor")
 			{
@@ -710,6 +716,10 @@ int OspacMain::run(void)
 					skipOrder=atof(arg[i].c_str());
 					target=Channels();
 				}
+			} else
+			if(arg[i]=="trim")
+			{
+				trim=true;
 			} else
 			if(arg[i]=="xgate")
 			{
@@ -1010,7 +1020,10 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 		return;
 	}
 
-
+	if(trim)
+	{
+		Skip::trim(work);
+	}
 	if(voiceEq)
 	{
 		work=Equalizer::voiceEnhance(work);

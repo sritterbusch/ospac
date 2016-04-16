@@ -122,6 +122,8 @@ or noise channels. Be aware, that filters such as
 .I --skip
 or 
 .I --noise
+or
+.I --trim
 will most likely generate out-of-sync audio as the cuts are not synchronized 
 between parallel segments.
 
@@ -156,6 +158,8 @@ a level of 1 skips all of the silence (default: 0.75).
 Do not skip any content
 .IP --noise
 Skip all actual signal to get an impression of the noise on the channel.
+.IP --trim
+Skip silence from the beginning or the end of channels.
 
 .SH "LEVELING, EQUALIZER AND NORMALIZATION OPTIONS"
 .IP --leveler       

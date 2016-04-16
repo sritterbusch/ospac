@@ -129,6 +129,11 @@ protected:
 	bool    skip;
 
 	/**
+	 * Should the current segment trim silence from start and end
+	 */
+	bool    trim;
+
+	/**
 	 * Silence detection for skipping filter
 	 */
 	float   skipSilence;
