@@ -70,6 +70,7 @@ Fl_Check_Button	    * levelerCheck[MAXPARTS];
 Fl_Check_Button		* xgateCheck[MAXPARTS];
 Fl_Check_Button     * xfilterCheck[MAXPARTS];
 Fl_Check_Button     * normalizeCheck[MAXPARTS];
+Fl_Check_Button     * trimCheck[MAXPARTS];
 Fl_Check_Button     * skipCheck[MAXPARTS];
 Fl_Check_Button     * noiseCheck[MAXPARTS];
 
@@ -195,6 +196,11 @@ void updateCommandLine(void)
 		if(xfilterCheck[i]->value())
 		{
 			add(line,call,"--xfilter");
+		}
+
+		if(trimCheck[i]->value())
+		{
+			add(line,call,"--trim");
 		}
 
 		if(skipCheck[i]->value())
@@ -603,6 +609,9 @@ void createTabs(int x,int y,int w,int h)
 		cy+=flh;
 		xfilterCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Crossfilter");
 		xfilterCheck[i]->callback(commandLine_callback);
+		cy+=flh;
+		trimCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Trim silence");
+		trimCheck[i]->callback(commandLine_callback);
 		cy+=flh;
 		skipCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Skip silence");
 		skipCheck[i]->callback(commandLine_callback);
