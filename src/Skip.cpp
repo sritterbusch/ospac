@@ -210,7 +210,10 @@ float Skip::trim(Channels &a,float level)
 
 	LOG(logDEBUG) << "Size before: " << len << " Size after: " << a[0].size() << std::endl;
 
-	return float(end-start)/samplerate;
+	float skipped=float(len-end+start)/samplerate;
+	LOG(logINFO) << "Trimmed " << skipped << "s" << std::endl;
+
+	return float(len-end+start)/samplerate;
 }
 
 
