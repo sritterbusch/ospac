@@ -392,6 +392,7 @@ int OspacMain::run(void)
 				std::cout << "  --plot [file]   Write final output to [file] in netpbm format" << std::endl;
 				std::cout << "  --mp3 [file]    Write final output to [file] using external lame" << std::endl;
 				std::cout << "  --ogg [file]    Write final output to [file] using external oggenc" << std::endl;
+				std::cout << "  --quality [n]   Quality from 0-low, 1-standard, 2-high, 3-insane" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Output meta data:" << std::endl;
 				std::cout << "  --title [text]  Set title tag to [text] if this exists in output" << std::endl;
@@ -809,6 +810,7 @@ int OspacMain::run(void)
 									.Episode(episode)
 									.Year(year)
 									.Image(image)
+									.Quality(quality)
 									.mp3(arg[i]);
 					if(result)
 					{
@@ -834,6 +836,7 @@ int OspacMain::run(void)
 									.Episode(episode)
 									.Year(year)
 									.Image(image)
+									.Quality(quality)
 									.ogg(arg[i]);
 					if(result)
 					{
@@ -842,6 +845,31 @@ int OspacMain::run(void)
 
 				}
 			} else
+			if(arg[i]=="quality")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					int value=atoi(arg[i].c_str());
+					switch(value)
+					{
+					case 0:
+						quality=Encode::LOW;
+						break;
+					case 1:
+					default:
+						quality=Encode::STANDARD;
+						break;
+					case 2:
+						quality=Encode::HIGH;
+						break;
+					case 3:
+						quality=Encode::INSANE;
+						break;
+					}
+				}
+			}else
 			if(arg[i]=="title")
 			{
 				if(i+1<arg.size())
