@@ -49,7 +49,7 @@ int Encode::lame(Channels &c,
 		Vrate="9";
 		break;
 	case STANDARD:
-		Vrate="8.5";
+		Vrate="8.4";
 		break;
 	case HIGH:
 		Vrate="5";
