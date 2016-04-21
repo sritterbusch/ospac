@@ -11,6 +11,7 @@ CPP_SRCS += \
 ../src/Encode.cpp \
 ../src/Equalizer.cpp \
 ../src/Frequency.cpp \
+../src/GuiMain.cpp \
 ../src/Log.cpp \
 ../src/Maximizer.cpp \
 ../src/Merge.cpp \
@@ -31,6 +32,7 @@ OBJS += \
 ./src/Encode.o \
 ./src/Equalizer.o \
 ./src/Frequency.o \
+./src/GuiMain.o \
 ./src/Log.o \
 ./src/Maximizer.o \
 ./src/Merge.o \
@@ -51,6 +53,7 @@ CPP_DEPS += \
 ./src/Encode.d \
 ./src/Equalizer.d \
 ./src/Frequency.d \
+./src/GuiMain.d \
 ./src/Log.d \
 ./src/Maximizer.d \
 ./src/Merge.d \
