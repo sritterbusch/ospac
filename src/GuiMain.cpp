@@ -62,6 +62,7 @@ Fl_Choice			* partType[MAXPARTS];
 Fl_Choice			* partTransition[MAXPARTS];
 Fl_Input			* partOverlap[MAXPARTS];
 
+Fl_Choice           * fileFilter[MAXPARTS][MAXFILES];
 Fl_Input			* fileName[MAXPARTS][MAXFILES];
 Fl_Button			* fileSelect[MAXPARTS][MAXFILES];
 Fl_Button			* fileRemove[MAXPARTS][MAXFILES];
@@ -216,7 +217,24 @@ void updateCommandLine(void)
 		for(int j=0;j<MAXFILES;j++)
 		{
 			if(std::string(fileName[i][j]->value())!="")
+			{
+				switch(fileFilter[i][j]->value())
+				{
+				case 0:
+				default:
+					break;
+				case 1:
+					add(line,call,"--left");
+					break;
+				case 2:
+					add(line,call,"--right");
+					break;
+				case 3:
+					add(line,call,"--to-mono");
+					break;
+				}
 				add(line,call,fileName[i][j]->value());
+			}
 		}
 
 		switch(partTransition[i]->value())
@@ -465,10 +483,12 @@ void tabs_callback(Fl_Widget* widget, void*)
 				fileName[i][j]->hide();
 				fileSelect[i][j]->hide();
 				fileRemove[i][j]->hide();
+				fileFilter[i][j]->hide();
 			} else
 			{
 				fileName[i][j]->show();
 				fileSelect[i][j]->show();
+				fileFilter[i][j]->show();
 				if(std::string(fileName[i][j]->value())=="")
 					fileRemove[i][j]->hide();
 				else
@@ -569,17 +589,25 @@ void createTabs(int x,int y,int w,int h)
 
 		for(int j=0;j<MAXFILES;j++)
 		{
-			fileName[i][j]=new Fl_Input(fx,fy+flh*j,(3*fw)/5-StdSep,StdChoiceHeight,"");
+			fileFilter[i][j]=new Fl_Choice(fx,fy+flh*j,fw/6-StdSep,StdChoiceHeight,"");
+			fileFilter[i][j]->add(" ");
+			fileFilter[i][j]->add("Left");
+			fileFilter[i][j]->add("Right");
+			fileFilter[i][j]->add("Mono");
+			fileFilter[i][j]->value(0);
+			fileFilter[i][j]->callback(tabs_callback);
+			fileName[i][j]=new Fl_Input(fx+fw/6,fy+flh*j,(3*fw)/6-StdSep,StdChoiceHeight,"");
 			fileName[i][j]->readonly(1);
-			fileSelect[i][j]=new Fl_Button(fx+(fw*3)/5,fy+flh*j,fw/5-StdSep,StdChoiceHeight,"Select");
+			fileSelect[i][j]=new Fl_Button(fx+(fw*4)/6,fy+flh*j,fw/6-StdSep,StdChoiceHeight,"Select");
 			fileSelect[i][j]->callback(tabs_callback);
-			fileRemove[i][j]=new Fl_Button(fx+(fw*4)/5,fy+flh*j,fw/5,StdChoiceHeight,"Remove");
+			fileRemove[i][j]=new Fl_Button(fx+(fw*5)/6,fy+flh*j,fw/6,StdChoiceHeight,"Remove");
 			fileRemove[i][j]->callback(tabs_callback);
 			fileRemove[i][j]->hide();
 			if(j>0)
 			{
 				fileName[i][j]->hide();
 				fileSelect[i][j]->hide();
+				fileFilter[i][j]->hide();
 			}
 
 		}
