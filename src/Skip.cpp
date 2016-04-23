@@ -75,7 +75,7 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 			sum/=a.size();
 		} while(sum<level && (d+int(i+skip))<int(len));
 
-		if(d>mincount+mintransition_u)
+		if(((unsigned)d)>mincount+mintransition_u)
 		{
 			float delta;
 
@@ -289,7 +289,7 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 			} while(sum<=level && (s+int(i+skip))<int(len));
 			s--;
 
-		} while(s-d<minsec_u && (s+int(i+skip))<int(len));
+		} while(s-d<(int)minsec_u && (s+int(i+skip))<int(len));
 		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found signal until "<<double(i+d)/samplerate<<std::endl;
 		LOG(logDEBUG) << double(i)/samplerate << "/"<<double(i+skip)/samplerate<<": Found silence until "<<double(i+s)/samplerate<<std::endl;
 

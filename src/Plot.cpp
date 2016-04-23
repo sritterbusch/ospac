@@ -37,7 +37,7 @@ std::vector<std::vector<unsigned> > Plot::histogramm(const Channel &channel,unsi
 		unsigned x=t*sizeX/size;
 		if(value<0)
 			value=0;
-		if(value>=sizeY)
+		if(((unsigned)value)>=sizeY)
 			value=sizeY-1;
 		int newLast=value;
 		if(value>=last)

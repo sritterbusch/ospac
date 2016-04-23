@@ -53,7 +53,7 @@ Channels & Wave::load(const std::string &name, Channels & channels,float skip,fl
 	for(int i=0;i<info.channels;i++)
 		channels.push_back(Channel((int)info.samplerate,std::vector<float>(fulllen)));
 
-	for(int i=0;i<info.frames && i<skiplen+fulllen;)
+	for(unsigned i=0;i<info.frames && i<skiplen+fulllen;)
 	{
 		int items=65536;
 
@@ -82,7 +82,7 @@ Channels & Wave::load(const std::string &name, Channels & channels,float skip,fl
 
 Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & channels,float skip,float maxlength)
 {
-	int length=0;
+	unsigned length=0;
 	double min=1e99;
 	double max=-1e99;
 	double sum=0;
@@ -151,7 +151,7 @@ Channels & Wave::loadAscii(const std::string &name,int samplerate,Channels & cha
 	unsigned o=channels.size();
 	channels.push_back(Channel(samplerate,fulllen));
 	std::ifstream in(name.c_str());
-	int i=0;
+	unsigned i=0;
 	for(;!in.eof() && i<length && i<skiplen+fulllen;i++)
 	{
 		while(!in.eof() && (in.peek()=='#' || in.peek()==' '
