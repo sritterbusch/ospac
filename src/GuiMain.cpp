@@ -596,12 +596,16 @@ void createTabs(int x,int y,int w,int h)
 			fileFilter[i][j]->add("Mono");
 			fileFilter[i][j]->value(0);
 			fileFilter[i][j]->callback(tabs_callback);
+			fileFilter[i][j]->tooltip("Downmix stereo input files to left, right or mono channel");
 			fileName[i][j]=new Fl_Input(fx+fw/6,fy+flh*j,(3*fw)/6-StdSep,StdChoiceHeight,"");
 			fileName[i][j]->readonly(1);
+			fileName[i][j]->tooltip("Input file in wave format");
 			fileSelect[i][j]=new Fl_Button(fx+(fw*4)/6,fy+flh*j,fw/6-StdSep,StdChoiceHeight,"Select");
+			fileSelect[i][j]->tooltip("Select input file, or files");
 			fileSelect[i][j]->callback(tabs_callback);
 			fileRemove[i][j]=new Fl_Button(fx+(fw*5)/6,fy+flh*j,fw/6,StdChoiceHeight,"Remove");
 			fileRemove[i][j]->callback(tabs_callback);
+			fileRemove[i][j]->tooltip("Remove this entry");
 			fileRemove[i][j]->hide();
 			if(j>0)
 			{
@@ -627,25 +631,32 @@ void createTabs(int x,int y,int w,int h)
 		levelerCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Leveler");
 		levelerCheck[i]->callback(commandLine_callback);
 		levelerCheck[i]->value(1);
+		levelerCheck[i]->tooltip("The adaptive leveler will try to bring all active passages to the same loudness, whereas silent passages are muted");
 		cy+=flh;
 		normalizeCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Normalize");
 		normalizeCheck[i]->callback(commandLine_callback);
 		normalizeCheck[i]->value(1);
+		normalizeCheck[i]->tooltip("Normalize current segment to maximum level");
 		cy+=flh;
 		xgateCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Crossgate");
 		xgateCheck[i]->callback(commandLine_callback);
+		xgateCheck[i]->tooltip("The robust crossgate mutes inactive channels when one channel is active to prevent crosstalk");
 		cy+=flh;
 		xfilterCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Crossfilter");
 		xfilterCheck[i]->callback(commandLine_callback);
+		xfilterCheck[i]->tooltip("The experimental crossfilter tries to mute later crosstalk copies of one channel in an other");
 		cy+=flh;
 		trimCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Trim silence");
 		trimCheck[i]->callback(commandLine_callback);
+		trimCheck[i]->tooltip("Trim silence from the start and the end of this segment");
 		cy+=flh;
 		skipCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Skip silence");
 		skipCheck[i]->callback(commandLine_callback);
+		skipCheck[i]->tooltip("Skip longer silence sections in this segment");
 		cy+=flh;
 		noiseCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Skip signal");
 		noiseCheck[i]->callback(commandLine_callback);
+		noiseCheck[i]->tooltip("Skip all signal from this segment to analyse background noise");
 		cy+=flh;
 
 		filterGroup->end();
