@@ -359,6 +359,7 @@ void generalSettings(int x,int y,int w,int h)
 	targetMode->add("Multi");
 	targetMode->value(1);
 	targetMode->callback(generalSettings_callback);
+	targetMode->tooltip("Set the rendering mode for the final file. 'Mono' creates a one-channel output, 'Stereo' intensity based stereo output, 'Spatial' an intensity based stereo output with inter-aural time differences, and 'Multi' takes multi-channel input to multi-channel output without any stereo rendering");
 
 	//cy+=nH/nLines+StdSep;
 
@@ -370,6 +371,7 @@ void generalSettings(int x,int y,int w,int h)
 
 	stereoLevel->value("0.9");
 	stereoLevel->callback(commandLine_callback);
+	stereoLevel->tooltip("Set factor and divisor of first and last channel in a segment on one output channel- a value of 0.9 yields a maximum of about 20% difference between left and right intensity for one voice");
 
 	cy+=nH/nLines+StdSep;
 
@@ -381,6 +383,7 @@ void generalSettings(int x,int y,int w,int h)
 
 	spatialDistance->value("0.03");
 	spatialDistance->callback(commandLine_callback);
+	spatialDistance->tooltip("Maximum distance in path length from a source to the two ears- since the ears are separated by about 0.22m, this path difference should be fairly below that value");
 
 	spatialDistance->hide(); // Standard for value 1
 
@@ -536,6 +539,7 @@ void createTabs(int x,int y,int w,int h)
 	{
 		partName[i]=SSTR("Segment "<<i+1);
 		partTab[i]=new Fl_Group(x,ty,w,th,partName[i].c_str());
+		partTab[i]->tooltip("A segment contains several audio files that are played at the same time and have the same filters applied");
 
 		partType[i]=new Fl_Choice(tw/6+StdSep,
 							 	  ty+StdSep,
@@ -548,6 +552,7 @@ void createTabs(int x,int y,int w,int h)
 		partType[i]->add("Raw");
 		partType[i]->value(0);
 		partType[i]->callback(commandLine_callback);
+		partType[i]->tooltip("The channels in a 'voice' segment are distributed in the stereo panorama, whereas a 'mix' segment typically contains stereo-mixed content- such as music intro or outros. Use raw for multi-channel input and output.");
 
 		partTransition[i]=new Fl_Choice(3*tw/6+StdSep,
 									 	ty+StdSep,
@@ -562,6 +567,7 @@ void createTabs(int x,int y,int w,int h)
 		partTransition[i]->add("Parallel");
 		partTransition[i]->value(0);
 		partTransition[i]->callback(tabs_callback);
+		partTransition[i]->tooltip("You have this and the next segment 'overlap' or 'fade'd into each other. The 'direct' transition is without overlap. If this and the next segment are to be parallel, you can apply different filters on them. Use 'end' if this is the last segment.");
 
 		partOverlap[i]=new Fl_Input(5*tw/6+StdSep,
 									ty+StdSep,
@@ -571,6 +577,7 @@ void createTabs(int x,int y,int w,int h)
 		partOverlap[i]->value("2");
 		partOverlap[i]->hide();
 		partOverlap[i]->callback(commandLine_callback);
+		partOverlap[i]->tooltip("This is the time this and the next segment overlap each other.");
 
 		int by=ty+StdSep*2+StdChoiceHeight+StdChoiceHeight;
 		int bh=th-StdSep*3-StdChoiceHeight-StdChoiceHeight;
@@ -668,6 +675,7 @@ void createTabs(int x,int y,int w,int h)
 	}
 
 	targetTab=new Fl_Group(x,ty,w,th,"Targets");
+	targetTab->tooltip("Define the output files and meta information that should be added to them if possible");
 
 	int bx=x+StdSep;
 	int by=ty+StdChoiceHeight;
@@ -815,7 +823,6 @@ int main(int argc, char **argv)
   commandLine->textsize(9);
 
   renderButton=new Fl_Button(window->w()*7/8,window->h()*7/8,window->w()/8,window->h()/8,"Run!");
-
   renderButton->callback(run_callback);
 
   updateCommandLine();
