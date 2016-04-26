@@ -1196,7 +1196,7 @@ int main(int argc,char * argv[])
 {
 	std::vector<std::string> arg;
 
-	LOG(logINFO) << "ospac 1.0 built " << __DATE__ << " " << __TIME__ << std::endl;
+	LOG(logINFO) << "ospac " << VERSION << " built " << __DATE__ << " " << __TIME__ << std::endl;
 
 	Log::setLoglevel(logDEBUG);
 	Log::setShowFunction(true);

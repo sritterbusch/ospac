@@ -809,30 +809,31 @@ void run_callback(Fl_Widget* widget, void*)
 
 int main(int argc, char **argv)
 {
-  window = new Fl_Window(640,480,"Ospac - Open source podcast chain - Pre-1.0");
+	std::string title=SSTR("Ospac - Open source podcast chain - " << VERSION << " built " << __DATE__ << " " << __TIME__ );
+	window = new Fl_Window(640,480,title.c_str());
 
-  generalSettings(0,0,window->w()/2,window->h()/6);
+	generalSettings(0,0,window->w()/2,window->h()/6);
 
-  createTabs(0, window->h()/6, window->w(), window->h()*5/6-window->h()/8);
+	createTabs(0, window->h()/6, window->w(), window->h()*5/6-window->h()/8);
 
-  window->add_resizable(*tabs);
+	window->add_resizable(*tabs);
 
-  commandLine=new Fl_Multiline_Input(0,window->h()*7/8,window->w()*7/8,window->h()/8,"");
-  commandLine->wrap(1);
-  commandLine->readonly(1);
-  commandLine->textsize(9);
+	commandLine=new Fl_Multiline_Input(0,window->h()*7/8,window->w()*7/8,window->h()/8,"");
+	commandLine->wrap(1);
+	commandLine->readonly(1);
+	commandLine->textsize(9);
 
-  renderButton=new Fl_Button(window->w()*7/8,window->h()*7/8,window->w()/8,window->h()/8,"Run!");
-  renderButton->callback(run_callback);
+	renderButton=new Fl_Button(window->w()*7/8,window->h()*7/8,window->w()/8,window->h()/8,"Run!");
+	renderButton->callback(run_callback);
 
-  updateCommandLine();
+	updateCommandLine();
 
-  window->end();
+	window->end();
 
-  window->position((Fl::w() - window->w())/2, (Fl::h() - window->h())/2);
+	window->position((Fl::w() - window->w())/2, (Fl::h() - window->h())/2);
 
-  window->show(argc, argv);
-  return Fl::run();
+	window->show(argc, argv);
+	return Fl::run();
 }
 
 #endif
