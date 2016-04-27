@@ -164,7 +164,7 @@ protected:
 	float	bandpassTransition;
 
 	/**
-	 * Current level factor for stereo or spatial amplituds
+	 * Current level factor for stereo or spatial amplitudes
 	 */
 	float	stereoLevel;
 
