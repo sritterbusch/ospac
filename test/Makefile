@@ -2,7 +2,8 @@ all:	volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise
 	intro-normalized-space.wav \
 	intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav multi-test.wav \
-	ligo-raw.wav ligo-filter.wav ligo-event.wav
+	ligo-raw.wav ligo-filter.wav ligo-event.wav \
+	dynamic-noise.wav dynamic-noise-normalized.wav
 
 clean:
 	rm -f 	intro-normalized.wav volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
@@ -12,7 +13,8 @@ clean:
 		stereo-mono-test.wav mono-test.wav multi-test.wav \
 		H-H1_LOSC_4_V1-1126259446-32.txt L-L1_LOSC_4_V1-1126259446-32.txt \
 		ligo-raw.wav ligo-filter.wav ligo-event.wav *~ *ppm \
-		intro-normalized-space.wav
+		intro-normalized-space.wav \
+		dynamic-noise.wav dynamic-noise-normalized.wav
 
 intro-normalized.wav:	intro-cooking-math-4.wav ../Release/ospac
 	../Release/ospac --raw --normalize intro-cooking-math-4.wav --output intro-normalized.wav
@@ -154,3 +156,16 @@ intro-normalized-space.wav:	intro-cooking-math-4.wav space-44s.wav ../Release/os
 	-../Release/ospac --raw intro-cooking-math-4.wav intro-normalized-space.wav --plot normalize-space-result.ppm
 	-pnmscale .5 < normalize-space-result.ppm | pnmtopng  > normalize-space-result.png && mv normalize-space-result.png ../images/
 	-rm normalize-space-result.ppm
+
+dynamic-noise.wav:	dynamic-test.wav ../Release/ospac
+	ospac --raw dynamic-test.wav --plot dynamic-test.ppm
+	-pnmscale .5 < dynamic-test.ppm|pnmtopng > dynamic-test.png && mv dynamic-test.png ../images
+	ospac --raw --noise dynamic-test.wav --output dynamic-noise.wav --plot dynamic-noise.ppm
+	-pnmscale .5 < dynamic-noise.ppm|pnmtopng > dynamic-noise.png && mv dynamic-noise.png ../images
+	
+	
+dynamic-noise-normalized.wav:	dynamic-test.wav ../Release/ospac
+	ospac --raw --noise dynamic-test.wav --normalize --output dynamic-noise-normalized.wav --plot dynamic-noise-normalized.ppm
+	-pnmscale .5 < dynamic-noise-normalized.ppm|pnmtopng > dynamic-noise-normalized.png && mv dynamic-noise-normalized.png ../images
+
+
