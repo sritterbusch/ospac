@@ -322,6 +322,10 @@ void OspacMain::setStandard()
 
 	bandpassLow=bandpassHigh=bandpassTransition=0;
 
+	lowpassFrequency=lowpassTransition=0;
+
+	highpassFrequency=highpassTransition=0;
+
 	skipOrder=0.75;
 
 	loadSkipSeconds=0;
@@ -349,7 +353,8 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
 							  "eqvoice","no-eqvoice",
-							  "bandpass","analyze",
+							  "bandpass", "lowpass", "highpass",
+							  "analyze",
 							  "output","mp3","ogg",
 							  "title","artist","album",
 							  "comment","category","episode",
@@ -440,6 +445,8 @@ int OspacMain::run(void)
 				std::cout << "  --normalize     Normalize final mix" << std::endl;
 				std::cout << "  --no-normalize  Disable final normalization" << std::endl;
 				std::cout << "  --bandpass [l] [h] [t] Bandpass from l to h Hertz, sharpness t Hertz" << std::endl;
+				std::cout << "  --lowpass [f] [t] Lowpass below f Hertz, sharpness t Hertz" << std::endl;
+				std::cout << "  --highpass [f] [t] Highpass above f Hertz, sharpness t Hertz" << std::endl;
 				std::cout << std::endl;
 				std::cout << " Import audio:" << std::endl;
 				std::cout << "  [file]          Load wave file" << std::endl;
@@ -779,6 +786,42 @@ int OspacMain::run(void)
 
 				}
 			} else
+			if(arg[i]=="lowpass")
+			{
+				target=Channels();
+
+				if(i+1<arg.size())
+				{
+					i++;
+					lowpassFrequency=atof(arg[i].c_str());
+					lowpassTransition=1000;
+					if(lowpassTransition>lowpassFrequency/2)
+						lowpassTransition=lowpassFrequency/2;
+					if(i+1<arg.size())
+					{
+						i++;
+						lowpassTransition=atof(arg[i].c_str());
+					}
+				}
+			} else
+			if(arg[i]=="highpass")
+			{
+				target=Channels();
+
+				if(i+1<arg.size())
+				{
+					i++;
+					highpassFrequency=atof(arg[i].c_str());
+					highpassTransition=1000;
+					if(highpassTransition>highpassFrequency/2)
+						highpassTransition=highpassFrequency/2;
+					if(i+1<arg.size())
+					{
+						i++;
+						highpassTransition=atof(arg[i].c_str());
+					}
+				}
+			} else
 			if(arg[i]=="output")
 			{
 				if(target.size()==0)
@@ -1055,6 +1098,26 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	if(voiceEq)
 	{
 		work=Equalizer::voiceEnhance(work);
+	}
+	if(lowpassTransition!=0)
+	{
+		std::vector<float> freqs(1);
+		freqs[0]=lowpassFrequency;
+		for(unsigned c=0;c<work.size();c++)
+		{
+			Channels bands=Frequency::split(work[c],freqs,lowpassTransition,true);
+			work[c]=bands[0];
+		}
+	}
+	if(highpassTransition!=0)
+	{
+		std::vector<float> freqs(1);
+		freqs[0]=highpassFrequency;
+		for(unsigned c=0;c<work.size();c++)
+		{
+			Channels bands=Frequency::split(work[c],freqs,highpassTransition,true);
+			work[c]=bands[1];
+		}
 	}
 	if(bandpassTransition!=0)
 	{

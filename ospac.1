@@ -196,6 +196,18 @@ Analyze frequency band components of active segments.
 Normalize final mix
 .IP --no-normalize  
 Disable final normalization
+.IP "--lowpass [frequency] [transition]"
+Apply a lowpass filter to the current audio segment up to 
+.I [frequency]
+Hertz. The 
+.I [transition]
+specifies the quality of the filter in Hertz of transition.
+.IP "--highpass [frequency] [transition]"
+Apply a highpass filter to the current audio segment from 
+.I [frequency]
+Hertz. The 
+.I [transition]
+specifies the quality of the filter in Hertz of transition.
 .IP "--bandpass [low] [high] [transition]"
 Apply a bandpass filter to the current audio segment, starting from
 .I [low]

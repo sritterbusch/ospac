@@ -164,6 +164,26 @@ protected:
 	float	bandpassTransition;
 
 	/**
+	 * Lowpass frequency limit in Hertz
+	 */
+	float	lowpassFrequency;
+
+	/**
+	 * Lowpass filter transition in Hertz
+	 */
+	float	lowpassTransition;
+
+	/**
+	 * Highpass frequency limit in Hertz
+	 */
+	float	highpassFrequency;
+
+	/**
+	 * Highpass filter transition in Hertz
+	 */
+	float	highpassTransition;
+
+	/**
 	 * Current level factor for stereo or spatial amplitudes
 	 */
 	float	stereoLevel;
