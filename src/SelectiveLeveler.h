@@ -22,6 +22,13 @@ class SelectiveLeveler
 {
 public:
 	/**
+	 * Mode selection which channels are joint for leveling, with
+	 * SINGLE all channels are treated seperately, with STEREO every two
+	 * channels are treated together, and with MULTI all channels are joined.
+	 */
+	enum ChannelMode { SINGLE, STEREO, MULTI };
+
+	/**
 	 * Compute windowed average l2 energy. If the energy is below silent
 	 * fraction, the signal is muted. If the energy is between silent fraction
 	 * to minFraction compared to the maximal windows l2 energy it is linearily
@@ -85,6 +92,25 @@ public:
 	 * @param backWindowSec average backward part of window for factor application
 	 */
 	static void levelStereo(Channel &aChannel,Channel &bChannel,float targetL2,double windowSec,float minFraction,float silentFraction,float forwardWindowSec,float backWindowSec);
+
+	/**
+	 * Compute windowed average l2 energy. If the energy is below silent
+	 * fraction, the signal is muted. If the energy is between silent fraction
+	 * to minFraction compared to the maximal windows l2 energy it is linearily
+	 * damped. The actual damping factor is windowed by forward and backwards
+	 * window interval. This function each considers two channels for analysis.
+	 * @param aChannels channels to do the individual leveling on
+	 * @param mode if and how channels are joined (SINGLE, STEREO, MULTI)
+	 * @param targetL2 target average l2 energy
+	 * @param windowSec window size in seconds for l2 average energy
+	 * @param minFraction fraction compared to l2 maximal value assumed signal
+	 * @param silentFraction fraction compared to l2 maximal value assumed silence
+	 * @param forwardWindowSec average forward part of window for factor application
+	 * @param backWindowSec average backward part of window for factor application
+	 */
+	static void level(Channels &aChannels,ChannelMode mode,float targetL2,double windowSec,float minFraction,float silentFraction,float forwardWindowSec,float backWindowSec);
+
+
 private:
 	template<class T>
 	static T sqr(const T&a){return a*a;}

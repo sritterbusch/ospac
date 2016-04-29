@@ -15,6 +15,7 @@
 
 #include "Channel.h"
 #include "Encode.h"
+#include "SelectiveLeveler.h"
 
 /**
  * @brief Main program class for dealing with command line options
@@ -107,6 +108,11 @@ protected:
 	 * Leveling target energy
 	 */
 	float   levelTarget;
+
+	/**
+	 * Shall channels be joined for leveling analysis?
+	 */
+	SelectiveLeveler::ChannelMode levelChannelMode;
 
 	/**
 	 * Should the current segment be cross-gated
@@ -306,6 +312,11 @@ protected:
 	 * Standard voice eq setting
 	 */
 	bool    stdVoiceEq[MaxArgMode];
+
+	/**
+	 * Standard Leveling Channel mode
+	 */
+	SelectiveLeveler::ChannelMode stdLevelChannelMode[MaxArgMode];
 
 public:
 	/**

@@ -322,3 +322,144 @@ void SelectiveLeveler::levelStereo(Channel &a,Channel &b,float targetL2,double w
 		}
 	}
 }
+
+void SelectiveLeveler::level(Channels &c,ChannelMode mode,float targetL2,double windowSec,float minFraction,float silentFraction,float forwardWindowSec,float backWindowSec)
+{
+	switch(mode)
+	{
+	case SINGLE:
+		level(c,targetL2,windowSec,minFraction,silentFraction,forwardWindowSec,backWindowSec);
+		return;
+	case STEREO:
+		levelStereo(c,targetL2,windowSec,minFraction,silentFraction,forwardWindowSec,backWindowSec);
+		return;
+	case MULTI:
+		break;
+	}
+	if(c.size()==0)
+		return;
+
+	const unsigned csize=c.size();
+
+	float maxL2=0;
+	unsigned samplerate=c[0].samplerate();
+	unsigned size=c[0].size();
+	for(unsigned i=1;i<csize;i++)
+	{
+		if(c[i].samplerate()>samplerate)
+			samplerate=c[i].samplerate();
+		if(c[i].size()>size)
+			size=c[i].size();
+	}
+	if(size==0)
+		return;
+
+	for(unsigned i=0;i<csize;i++)
+	{
+		if(c[i].size()<size)
+			c[i]=c[i].resizeTo(size);
+	}
+
+	if(windowSec>float(size)/samplerate/4)
+		windowSec=float(size)/samplerate/4;
+	const unsigned window=windowSec*samplerate;
+	const unsigned forwardWindow=forwardWindowSec*samplerate;
+	const unsigned backWindow=backWindowSec*samplerate;
+
+	Channel factors(samplerate,size);
+	double l2=0;
+
+	for(unsigned j=0;j<window;j++)
+		for(unsigned i=0;i<csize;i++)
+		l2+=sqr(c[i][j]);
+
+	for(unsigned i=window/2;i<size-window/2-1;i++)
+	{
+		factors[i]=sqrt(l2/window/2);
+		if(factors[i]>maxL2)
+			maxL2=factors[i];
+		for(unsigned k=0;k<csize;k++)
+			l2+=sqr(c[k][i+window/2])-sqr(c[k][i-window/2]);
+		if(l2<0)
+			l2=0;
+	}
+	float minLevel=maxL2*minFraction;
+	float silentLevel=maxL2*silentFraction;
+
+	// Wave::save("levels.wav",factors);
+
+	LOG(logINFO) << "Maximum windowed L2 energy: " << maxL2 << std::endl;
+	LOG(logINFO) << "Level minimum             : " << minLevel << std::endl;
+	LOG(logINFO) << "Level silence             : " << silentLevel << std::endl;
+
+	int c0=0,c1=0,c2=0,o=0;
+
+	for(unsigned i=window/2;i<size-window/2-1;i++)
+	{
+		if(factors[i]<silentLevel)
+		{
+			factors[i]=0;
+			c0++;
+		} else
+		if(factors[i]<minLevel)
+		{
+			factors[i]=(targetL2/factors[i])*(factors[i]-silentLevel)/(minLevel-silentLevel);
+			c1++;
+		} else
+		{
+			factors[i]=targetL2/factors[i];
+			c2++;
+		}
+		for(unsigned k=0;k<csize;k++)
+			if(fabs(factors[i]*c[k][i])>32000)
+			{
+				factors[i]=32000/fabs(c[k][i]);
+				o++;
+			}
+
+	}
+	for(unsigned i=0;i<window/2;i++)
+		factors[i]=(factors[window/2]*i)/(window/2);
+	for(unsigned i=size-window/2-1;i<size;i++)
+		factors[i]=(factors[size-window/2-2]*(size-i))/(window/2);
+
+	// Wave::save("factors.wav",factors);
+
+
+	LOG(logINFO) << "Silence                   : " << double(c0)/samplerate << "s" << std::endl;
+	LOG(logINFO) << "Transition                : " << double(c1)/samplerate << "s" << std::endl;
+	LOG(logINFO) << "Full                      : " << double(c2)/samplerate << "s" << std::endl;
+	LOG(logINFO) << "Over                      : " << double(o)/samplerate << "s" << std::endl;
+
+	int 	windowcount=forwardWindow;
+	double 	factorSum=0;
+	for(unsigned i=0;i<forwardWindow;i++)
+		factorSum+=factors[i];
+
+	for(unsigned i=0;i<size;i++)
+	{
+		float f=(factorSum/windowcount);
+		if(f>factors[i])
+			f=factors[i];
+		for(unsigned k=0;k<csize;k++)
+			c[k][i]*=f;
+		/*if((i%c.samplerate())==0)
+		{
+			LOG(logDEBUG) << i/c.samplerate() << " " << factors[i] << " " << (factorSum/windowcount) << " " << factorSum << " " << windowcount << std::endl;
+		}*/
+		if((int)i-(int)backWindow>=0)
+		{
+			factorSum-=factors[i-backWindow];
+			windowcount--;
+			if(factorSum<0)
+				factorSum=0;
+		}
+		if(i+forwardWindow<size)
+		{
+			factorSum+=factors[i+forwardWindow];
+			windowcount++;
+		}
+	}
+
+}
+

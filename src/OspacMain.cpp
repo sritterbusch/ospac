@@ -275,6 +275,10 @@ OspacMain::OspacMain(std::vector<std::string> aArg) : arg(aArg),
 	stdLevelTarget[MIX]  =3000;
 	stdLevelTarget[RAW]  =3000;
 
+	stdLevelChannelMode[VOICE]= SelectiveLeveler::SINGLE;
+	stdLevelChannelMode[MIX]= SelectiveLeveler::STEREO;
+	stdLevelChannelMode[RAW]= SelectiveLeveler::MULTI;
+
 	stdXGate[VOICE]=true;
 	stdXGate[MIX]  =false;
 	stdXGate[RAW]  =false;
@@ -307,6 +311,7 @@ void OspacMain::setStandard()
 	normalizer=stdNormalizer[argMode];
 	leveler=stdLeveler[argMode];
 	levelTarget=stdLevelTarget[argMode];
+	levelChannelMode=stdLevelChannelMode[argMode];
 	xGate=stdXGate[argMode];
 	xFilter=stdXFilter[argMode];
 	skip=stdSkip[argMode];
@@ -346,7 +351,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "ascii","left","right","to-mono",
 							  "fade","overlap","parallel",
 							  "factor", "no-factor",
-							  "leveler","no-leveler","target",
+							  "leveler","no-leveler","target","level-mode",
 							  "normalize","no-normalize",
 							  "skip","no-skip","skip-level","skip-order",
 							  "noise", "trim",
@@ -436,6 +441,7 @@ int OspacMain::run(void)
 				std::cout << " Leveling, equalizer and normalization:" << std::endl;
 				std::cout << "  --leveler       Enable selective leveler" << std::endl;
 				std::cout << "  --target [n]    Set average target L2 energy [n] for leveler (3000)" << std::endl;
+				std::cout << "  --level-mode [s] Shall channels be joined for leveling (single, stereo, multi)" << std::endl;
 				std::cout << "  --no-leveler    Disable selective leveler" << std::endl;
 				std::cout << "  --factor [n]    Multiply channels by factor [n] with sigmoid limiter (1.25)" << std::endl;
 				std::cout << "  --no-factor     Disable channel multiplier" << std::endl;
@@ -668,6 +674,22 @@ int OspacMain::run(void)
 					i++;
 					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
 					levelTarget=atof(arg[i].c_str());
+				}
+			} else
+			if(arg[i]=="level-mode")
+			{
+				target=Channels();
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					if(arg[i]=="single")
+						levelChannelMode=SelectiveLeveler::SINGLE;
+					if(arg[i]=="stereo")
+						levelChannelMode=SelectiveLeveler::STEREO;
+					if(arg[i]=="multi")
+						levelChannelMode=SelectiveLeveler::MULTI;
+
 				}
 			} else
 			if(arg[i]=="normalize")
@@ -1151,11 +1173,11 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 		LOG(logDEBUG) << "Leveler" << std::endl;
 
 		if(argMode==VOICE)
-			SelectiveLeveler::level(work,levelTarget,1.0,0.05,0.025,0.2,0.4);
+			SelectiveLeveler::level(work,levelChannelMode,levelTarget,1.0,0.05,0.025,0.2,0.4);
 		else if(argMode==MIX && (work.size()%2)==0)
-			SelectiveLeveler::levelStereo(work,levelTarget,1.0,0.1,0.05,0.1,0.5);
+			SelectiveLeveler::level(work,levelChannelMode,levelTarget,1.0,0.1,0.05,0.1,0.5);
 		else
-			SelectiveLeveler::level(work,levelTarget,1.0,0.05,0.025,0.2,0.4);
+			SelectiveLeveler::level(work,levelChannelMode,levelTarget,1.0,0.05,0.025,0.2,0.4);
 	}
 	if(skip)
 	{
