@@ -170,6 +170,13 @@ case of an active channel it tries to amplify the current position
 such the a target energy for the window is achieved. If the channel
 is deemed inactive, the channel is de-amplified. To avoid to fast
 changes in amplification levels, the levels are averaged over time.
+.IP "--level-mode {single|stereo|multi}"
+The leveling can work on single channels, on each two consecutive stereo 
+channels, or on all channels at once. When using the single mode on a stereo
+signal, it might destroy wanted differences in loudness between the two channels-
+therefore they should be joined in the leveling. The multi mode joins all channels
+for the analysis, and levels all channels by the same amount. The single mode
+is default for voice segments, the stereo mode is default for mix segments.
 .IP "--target [n]"    
 Set average target L2 energy 
 .I [n] 
