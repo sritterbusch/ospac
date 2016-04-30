@@ -68,6 +68,7 @@ Fl_Button			* fileSelect[MAXPARTS][MAXFILES];
 Fl_Button			* fileRemove[MAXPARTS][MAXFILES];
 
 Fl_Check_Button	    * levelerCheck[MAXPARTS];
+Fl_Choice           * levelerChoice[MAXPARTS];
 Fl_Check_Button		* xgateCheck[MAXPARTS];
 Fl_Check_Button     * xfilterCheck[MAXPARTS];
 Fl_Check_Button     * normalizeCheck[MAXPARTS];
@@ -170,6 +171,25 @@ void updateCommandLine(void)
 		{
 			if(partType[i]->value()!=0)
 				add(line,call,"--leveler");
+
+			if(partType[i]->value()==2
+			|| (partType[i]->value()==1 && levelerChoice[i]->value()!=1)
+			|| (partType[i]->value()==0 && levelerChoice[i]->value()!=0))
+			{
+				add(line,call,"--level-mode");
+				switch(levelerChoice[i]->value())
+				{
+				case 0:
+					add(line,call,"single");
+					break;
+				case 1:
+					add(line,call,"stereo");
+					break;
+				case 2:
+					add(line,call,"multi");
+					break;
+				}
+			}
 		} else
 		{
 			if(partType[i]->value()==0)
@@ -633,12 +653,20 @@ void createTabs(int x,int y,int w,int h)
 
 		int cy=fy;
 		int cx=bx+StdSep;
-		int cw=bw-StdSep*2;
+		int cw=(bw-StdSep*3)/2;
+		int cx2=cx+cw+StdSep;
 
 		levelerCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Leveler");
 		levelerCheck[i]->callback(commandLine_callback);
 		levelerCheck[i]->value(1);
 		levelerCheck[i]->tooltip("The adaptive leveler will try to bring all active passages to the same loudness, whereas silent passages are muted");
+		levelerChoice[i]=new Fl_Choice(cx2,cy,cw,StdChoiceHeight,"");
+		levelerChoice[i]->add("Single");
+		levelerChoice[i]->add("Stereo");
+		levelerChoice[i]->add("Multi");
+		levelerChoice[i]->callback(commandLine_callback);
+		levelerChoice[i]->value(0);
+		levelerChoice[i]->tooltip("In 'Single' mode each channel is treated separately, in 'Stereo' mode the loudness of two consecutive channels is leveled, in 'Multi' mode the loudness of all channels together is leveled");
 		cy+=flh;
 		normalizeCheck[i]=new Fl_Check_Button(cx,cy,cw,StdChoiceHeight,"Normalize");
 		normalizeCheck[i]->callback(commandLine_callback);
