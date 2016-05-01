@@ -1,4 +1,4 @@
-all:	ospac ospac-gui
+all:	ospac
 
 ospac:	src/*cpp src/*h
 	cd Release;make all;cd ..
@@ -23,7 +23,7 @@ install-ospac:	Release/ospac
 install-gui:	GUI-Release/ospac-gui
 	cd GUI-Release;make install-gui;cd ..
 	
-install: install-ospac	install-gui
+install: install-ospac
 
 uninstall:
 	cd Release;make uninstall; cd ..
