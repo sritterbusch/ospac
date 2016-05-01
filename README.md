@@ -66,6 +66,11 @@ On MacOS you can install libsndfile using homebrew simply by:
 
 	$ brew install libsndfile
 
+If you want to build the GUI, install the development packages for 
+fltk-1.3 and then build ospac-gui:
+
+	$ make ospac-gui && sudo make install-gui
+
 ## API Reference
 
 See the doxygen docs 
