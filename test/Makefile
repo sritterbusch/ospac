@@ -23,7 +23,7 @@ intro-normalized.wav:	intro-cooking-math-4.wav ../Release/ospac
 	-rm normalize-result.ppm
 
 volume-changes-leveled.wav:	volume-changes.wav ../Release/ospac
-	../Release/ospac --raw --leveler volume-changes.wav --target 8000 --output volume-changes-leveled.wav
+	../Release/ospac --raw --leveler volume-changes.wav --output volume-changes-leveled.wav
 	-../Release/ospac --raw volume-changes.wav volume-changes-leveled.wav --plot leveler-result.ppm
 	-pnmscale .5 < leveler-result.ppm | pnmtopng > leveler-result.png && mv leveler-result.png ../images/
 	-rm leveler-result.ppm
