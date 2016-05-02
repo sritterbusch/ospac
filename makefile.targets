@@ -11,3 +11,9 @@ uninstall:
 	rm -f /usr/local/bin/ospac-gui
 	rm -f /usr/local/share/man/man1/ospac.1
 
+ospac-gui-linux: $(OBJS) $(USER_OBJS)
+	@echo 'Building target: $@'
+	@echo 'Invoking: Cross G++ Linker'
+	g++ `fltk-config --ldflags` -L/usr/local/lib -o "ospac-gui" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Finished building target: $@'
+	@echo ' '

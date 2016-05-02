@@ -7,9 +7,15 @@ gui:	ospac-gui
 	
 ospac-gui:	src/*cpp src/*h
 	cd GUI-Release;make all;cd ..
+
+ospac-gui-linux:	src/*cpp src/*h
+	cd GUI-Release;make ospac-gui-linux;cd ..
 	
 GUI-Release/ospac-gui:	src/*cpp src/*h
 	cd GUI-Release;make all;cd ..
+
+GUI-Release/ospac-gui-linux:	src/*cpp src/*h
+	cd GUI-Release;make ospac-gui-linux;cd ..
 	
 Release/ospac:	src/*cpp src/*h
 	cd Release;make all;cd ..
