@@ -6,7 +6,7 @@ install-gui:	ospac-gui
 	cp ospac-gui /usr/local/bin
 	cp ../ospac.1 /usr/local/share/man/man1/
 
-unsinstall:
+uninstall:
 	rm -f /usr/local/bin/ospac
 	rm -f /usr/local/bin/ospac-gui
 	rm -f /usr/local/share/man/man1/ospac.1
