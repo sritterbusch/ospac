@@ -71,6 +71,12 @@ fltk-1.3 and then build ospac-gui:
 
 	$ make ospac-gui && sudo make install-gui
 
+Since there seem to be some broken fltk-1.3 source packages on linux, you
+can alternatively try the following to build a non-statically linked
+version:
+
+	$ make ospac-gui-linux && sudo make install-gui
+
 ## API Reference
 
 See the doxygen docs 
