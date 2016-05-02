@@ -1,11 +1,11 @@
 .\" Process this file with
 .\" groff -man -Tascii ospac.1
 .\"
-.TH OSPAC 1 
+.TH OSPAC 1 "May 2 2016"
 .SH NAME
 ospac \- open source podcast audio chain
 .SH SYNOPSIS
-.B ospac [-voice] [-mix] 
+.B ospac [-voice] [-mix]
 .I input1.wav input2.wav
 .B ...
 .B --output
@@ -13,15 +13,15 @@ ospac \- open source podcast audio chain
 
 .SH DESCRIPTION
 .B ospac
-will take a multi-channel recording of a conversation and master this to 
-a high-quality mix-down with support for intro and outro. It was developed 
+will take a multi-channel recording of a conversation and master this to
+a high-quality mix-down with support for intro and outro. It was developed
 due to the need of a batch solution for audio podcast creation.
 
 .SH "INFORMATION OPTIONS"
 .IP --help
 Display help
-.IP "--verbosity [n]" 
-Set verbosity to level 
+.IP "--verbosity [n]"
+Set verbosity to level
 .I [n]
 
 .SH "OUTPUT OPTIONS"
@@ -32,29 +32,29 @@ Standard mode to produce a stereo output.
 .IP --mono
 Create a mono output.
 .IP --multi
-Create a multichannel file where each first and further channels in 
+Create a multichannel file where each first and further channels in
 each input phases are mixed to each other
 .IP "--set-stereo-level [n]"
-Set maximum volume factor for stereo and spatial mode (0.9) - 
+Set maximum volume factor for stereo and spatial mode (0.9) -
 the lower the stronger the effect is
 .IP "--set-stereo-spatial [n]"
 Set maximum inter-aural delay distance in meter in spatial mode (0.03) -
-the higher the stronger - the average distance between human ears are 
+the higher the stronger - the average distance between human ears are
 0.22 (meter) so you probably should not go above that limit
 
 .SH "OUTPUT TARGETS"
 .IP "--output [file]"
-Write final output to 
+Write final output to
 .I [file]
 in wave format
 .IP "--mp3 [file]"
-Write final output to 
+Write final output to
 .I [file]
 in mp3 format using the external
 .B lame
 command which has to be in the path
 .IP "--ogg [file]"
-Write final output to 
+Write final output to
 .I [file]
 in ogg format using the external
 .B oggenc
@@ -66,31 +66,31 @@ in netpbm PPM format
 
 .SH "OUTPUT META DATA"
 .IP "--title [text]"
-Set title tag to 
+Set title tag to
 .I [text]
 if this exists in output
 .IP "--artist [text]"
-Set artist tag to 
-.I [text] 
+Set artist tag to
+.I [text]
 if this exists in output
 .IP "--album [text]"
 Set album tag to
 .I [text]
 if this exists in output
 .IP "--comment [text]"
-Set comment tag to 
+Set comment tag to
 .I [text]
 if this exists in output
 .IP "--category [text]"
-Set category tag to 
+Set category tag to
 .I [text]
 if this exists in output
 .IP "--episode [text]"
-Set episode tag to 
+Set episode tag to
 .I [text]
 if this exists in output
 .IP "--year [text]"
-Set year tag to 
+Set year tag to
 .I [text]
 if this exists in output
 .IP "--image [file]"
@@ -103,33 +103,33 @@ if this exists in output
 Start of voice channel segment (default)
 .IP --mix
 Start pre-mixed channel segment
-.IP --raw 
+.IP --raw
 Start of raw channel segment
 
 .SH "SEGMENT TRANSITION OPTIONS"
-.IP "--fade [s]"      
-Fading transition over 
+.IP "--fade [s]"
+Fading transition over
 .I [s]
 seconds
-.IP "--overlap [s]"   
-Overlapping transition over 
-.I [s] 
+.IP "--overlap [s]"
+Overlapping transition over
+.I [s]
 seconds
 .IP "--parallel"
 Render the previous and next segment in parallel. By this, you can have
 independent processing for parallel audio channels. For example, for music
 or noise channels. Be aware, that filters such as
 .I --skip
-or 
+or
 .I --noise
 or
 .I --trim
-will most likely generate out-of-sync audio as the cuts are not synchronized 
+will most likely generate out-of-sync audio as the cuts are not synchronized
 between parallel segments.
 
 .SH "CROSSTALK FILTER OPTIONS"
 .IP --xgate
-Enable robust crosstalk gate: This tries to mute channels that do not 
+Enable robust crosstalk gate: This tries to mute channels that do not
 contribute significant input to cancel crosstalk.
 Each channel is given an activity score computed by its windowed
 energy multiple compared to its assumed silence level. The channel
@@ -138,23 +138,23 @@ with their score compared to the highest.
 .IP --no-xgate
 Disable crosstalk gate
 .IP --xfilter
-Enable experimental crosstalk filter: This tries to mute channels that 
+Enable experimental crosstalk filter: This tries to mute channels that
 contain mainly input that was recorded by other channels before, i.e.
-crosstalk.    
+crosstalk.
 .IP --no-xfilter
 Disable crosstalk filter for current input section
 
 .SH "ADAPTIVE SILENCE SKIP OPTIONS"
-.IP --skip          
+.IP --skip
 Soft skip silent passages over 0.5s length
-.IP "--skip-level [n]"    
+.IP "--skip-level [n]"
 Fraction of maximum level considered silence (0.01)
 .IP "--skip-order [n]"
 Order of time of detected silence that is to be skipped.
 A level of 0 only skips the 0.5s,
 a level 0.5 skips about the square root of the silence,
 a level of 1 skips all of the silence (default: 0.75).
-.IP --no-skip       
+.IP --no-skip
 Do not skip any content
 .IP --noise
 Skip all actual signal to get an impression of the noise on the channel.
@@ -162,7 +162,7 @@ Skip all actual signal to get an impression of the noise on the channel.
 Skip silence from the beginning or the end of channels.
 
 .SH "LEVELING, EQUALIZER AND NORMALIZATION OPTIONS"
-.IP --leveler       
+.IP --leveler
 Enable selective leveler: Enable windowed energy based leveler for current input section.
 Depending on the energy level in a window around the current position
 the filter decideds whether this is an active channel or not. In
@@ -171,27 +171,27 @@ such the a target energy for the window is achieved. If the channel
 is deemed inactive, the channel is de-amplified. To avoid to fast
 changes in amplification levels, the levels are averaged over time.
 .IP "--level-mode {single|stereo|multi}"
-The leveling can work on single channels, on each two consecutive stereo 
+The leveling can work on single channels, on each two consecutive stereo
 channels, or on all channels at once. When using the single mode on a stereo
 signal, it might destroy wanted differences in loudness between the two channels-
 therefore they should be joined in the leveling. The multi mode joins all channels
 for the analysis, and levels all channels by the same amount. The single mode
 is default for voice segments, the stereo mode is default for mix segments.
-.IP "--target [n]"    
-Set average target L2 energy 
-.I [n] 
-for leveler. The L2 energy is normed to  one entry, so a level of 
+.IP "--target [n]"
+Set average target L2 energy
+.I [n]
+for leveler. The L2 energy is normed to  one entry, so a level of
 2000-6000 seems suitable. Default: 3000.
-.IP --no-leveler    
+.IP --no-leveler
 Disable selective leveler
-.IP "--factor [n]"   
-Multiply channels by factor 
-.I [n] 
-with sigmoid limiter (default: 1.25): 
+.IP "--factor [n]"
+Multiply channels by factor
+.I [n]
+with sigmoid limiter (default: 1.25):
 Amplify the signal by given factor and pass the resulting signal
 through a sigmoid function to prevent overdrive, but eventual
 distortion cannot be avoided.
-.IP --no-factor     
+.IP --no-factor
 Disable channel multiplier
 .IP --eqvoice
 Attenuate frequency bands for improved diction
@@ -199,34 +199,34 @@ Attenuate frequency bands for improved diction
 Do not attenuate frequency bands
 .IP --analyze
 Analyze frequency band components of active segments.
-.IP --normalize     
+.IP --normalize
 Normalize final mix
-.IP --no-normalize  
+.IP --no-normalize
 Disable final normalization
 .IP "--lowpass [frequency] [transition]"
-Apply a lowpass filter to the current audio segment up to 
+Apply a lowpass filter to the current audio segment up to
 .I [frequency]
-Hertz. The 
+Hertz. The
 .I [transition]
 specifies the quality of the filter in Hertz of transition.
 .IP "--highpass [frequency] [transition]"
-Apply a highpass filter to the current audio segment from 
+Apply a highpass filter to the current audio segment from
 .I [frequency]
-Hertz. The 
+Hertz. The
 .I [transition]
 specifies the quality of the filter in Hertz of transition.
 .IP "--bandpass [low] [high] [transition]"
 Apply a bandpass filter to the current audio segment, starting from
 .I [low]
-Hertz up to 
+Hertz up to
 .I [high]
-Hertz. The 
+Hertz. The
 .I [transition]
 specifies the quality of the filter in Hertz of transition.
 
 .SH "INPUT AUDIO FILES"
 .IP "[wave file]"
-Load the file 
+Load the file
 .I [wave file]
 and regard each channel as an individual input.
 .IP "--left [wave file]"
