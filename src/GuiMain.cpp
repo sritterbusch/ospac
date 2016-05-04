@@ -837,7 +837,7 @@ void run_callback(Fl_Widget* widget, void*)
 
 int main(int argc, char **argv)
 {
-	std::string title=SSTR("Ospac - Open source podcast chain - " << VERSION << " built " << __DATE__ << " " << __TIME__ );
+	std::string title=SSTR("Ospac - Open source podcast audio chain - " << VERSION << " built " << __DATE__ << " " << __TIME__ );
 	window = new Fl_Window(640,480,title.c_str());
 
 	generalSettings(0,0,window->w()/2,window->h()/6);
