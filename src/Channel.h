@@ -156,4 +156,24 @@ private:
  */
 typedef std::vector<Channel> Channels;
 
+/**
+ * Unify samplerate and length of channels
+ * @param channels to be unified
+ */
+void unify(Channels &channels);
+
+/**
+ * Unify samplerate of channels
+ * @param channels to be unified
+ * @return samplerate in Hertz
+ */
+unsigned unifiedSamplerate(Channels &channels);
+
+/**
+ * Unify length of channels
+ * @param channels to be unified
+ * @return length in number of channels
+ */
+unsigned unifiedLength(Channels &channels);
+
 #endif /* CHANNEL_H_ */

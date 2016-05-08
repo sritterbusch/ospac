@@ -196,3 +196,39 @@ Channel Channel::resampleTo(unsigned newRate) const
 	LOG(logDEBUG) << "done"<< std::endl;
 	return Channel(newRate,target);
 }
+
+unsigned unifiedSamplerate(Channels &a)
+{
+	unsigned samplerate=0;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()>samplerate)
+			samplerate=a[c].samplerate();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()<samplerate)
+			a[c]=a[c].resampleTo(samplerate);
+
+	return samplerate;
+}
+
+unsigned unifiedLength(Channels &a)
+{
+	unsigned len=0;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()>len)
+			len=a[c].size();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()<len)
+			a[c]=a[c].resizeTo(len);
+
+	return len;
+}
+
+void unify(Channels &a)
+{
+	unifiedLength(a);
+	unifiedSamplerate(a);
+}
