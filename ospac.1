@@ -154,6 +154,12 @@ Order of time of detected silence that is to be skipped.
 A level of 0 only skips the 0.5s,
 a level 0.5 skips about the square root of the silence,
 a level of 1 skips all of the silence (default: 0.75).
+.IP "--skip-target [n]"
+Try to adapt given parameters of level and order to achieve the given
+fraction of length. A parameter of 0.9 will try to reduce the file
+to 90% of its size. Note, that the result will sound less acceptible
+as soon as all silence space was used up. The algorithm iterates to
+the target size, and is therefore only suitable for small files.
 .IP --no-skip
 Do not skip any content
 .IP --noise
