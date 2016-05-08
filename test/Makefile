@@ -1,9 +1,12 @@
 all:	volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
+	../images/skip-target.png \
 	intro-normalized-space.wav \
 	intro-factor-2.wav intro-factor-4.wav intro-xfilter.wav intro-xgate.wav \
 	stereo-test.wav spatial-test.wav spatial-strong.wav stereo-strong.wav stereo-mono-test.wav mono-test.wav multi-test.wav \
 	ligo-raw.wav ligo-filter.wav ligo-event.wav \
-	dynamic-noise.wav dynamic-noise-normalized.wav
+	dynamic-noise.wav dynamic-noise-normalized.wav \
+	intro-normalized-skip-05.wav intro-normalized-skip-06.wav intro-normalized-skip-07.wav \
+	intro-normalized-skip-08.wav intro-normalized-skip-09.wav
 
 clean:
 	rm -f 	intro-normalized.wav volume-changes-leveled.wav intro-normalized-skip.wav intro-normalized-noise.wav \
@@ -14,7 +17,9 @@ clean:
 		H-H1_LOSC_4_V1-1126259446-32.txt L-L1_LOSC_4_V1-1126259446-32.txt \
 		ligo-raw.wav ligo-filter.wav ligo-event.wav *~ *ppm \
 		intro-normalized-space.wav \
-		dynamic-noise.wav dynamic-noise-normalized.wav
+		dynamic-noise.wav dynamic-noise-normalized.wav \
+		intro-normalized-skip-05.wav intro-normalized-skip-06.wav intro-normalized-skip-07.wav \
+		intro-normalized-skip-08.wav intro-normalized-skip-09.wav
 
 intro-normalized.wav:	intro-cooking-math-4.wav ../Release/ospac
 	../Release/ospac --raw --normalize intro-cooking-math-4.wav --output intro-normalized.wav
@@ -33,6 +38,46 @@ intro-normalized-skip.wav:	intro-normalized.wav ../Release/ospac
 	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip.wav --plot skip-result.ppm
 	-pnmscale .5 < skip-result.ppm |pnmtopng > skip-result.png && mv skip-result.png ../images/
 	-rm skip-result.ppm
+
+intro-normalized-skip-09.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --skip --skip-target 0.9 intro-normalized.wav --output intro-normalized-skip-09.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip-09.wav --plot skip-result-09.ppm
+	-pnmscale .5 < skip-result-09.ppm |pnmtopng > skip-result-09.png && mv skip-result-09.png ../images/
+	-rm skip-result-09.ppm
+
+intro-normalized-skip-08.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --skip --skip-target 0.8 intro-normalized.wav --output intro-normalized-skip-08.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip-08.wav --plot skip-result-08.ppm
+	-pnmscale .5 < skip-result-08.ppm |pnmtopng > skip-result-08.png && mv skip-result-08.png ../images/
+	-rm skip-result-08.ppm
+
+intro-normalized-skip-07.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --skip --skip-target 0.7 intro-normalized.wav --output intro-normalized-skip-07.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip-07.wav --plot skip-result-07.ppm
+	-pnmscale .5 < skip-result-07.ppm |pnmtopng > skip-result-07.png && mv skip-result-07.png ../images/
+	-rm skip-result-07.ppm
+
+intro-normalized-skip-06.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --skip --skip-target 0.6 intro-normalized.wav --output intro-normalized-skip-06.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip-06.wav --plot skip-result-06.ppm
+	-pnmscale .5 < skip-result-06.ppm |pnmtopng > skip-result-06.png && mv skip-result-06.png ../images/
+	-rm skip-result-06.ppm
+
+intro-normalized-skip-05.wav:	intro-normalized.wav ../Release/ospac
+	../Release/ospac --raw --skip --skip-target 0.5 intro-normalized.wav --output intro-normalized-skip-05.wav
+	-../Release/ospac --raw intro-normalized.wav intro-normalized-skip-05.wav --plot skip-result-05.ppm
+	-pnmscale .5 < skip-result-05.ppm |pnmtopng > skip-result-05.png && mv skip-result-05.png ../images/
+	-rm skip-result-05.ppm
+
+../images/skip-target.png:	intro-normalized.wav intro-normalized-skip-05.wav intro-normalized-skip-06.wav intro-normalized-skip-07.wav intro-normalized-skip-08.wav intro-normalized-skip-09.wav
+	-../Release/ospac --raw intro-normalized.wav \
+		intro-normalized-skip-09.wav \
+		intro-normalized-skip-08.wav \
+		intro-normalized-skip-07.wav \
+		intro-normalized-skip-06.wav \
+		intro-normalized-skip-05.wav --plot skip-target.ppm
+	-pnmscale .5 < skip-target.ppm |pnmtopng > skip-target.png && mv skip-target.png ../images/
+	-rm skip-target.ppm
 
 intro-normalized-noise.wav:	intro-normalized.wav ../Release/ospac
 	../Release/ospac --raw --noise intro-normalized.wav --output intro-normalized-noise.wav
@@ -158,14 +203,14 @@ intro-normalized-space.wav:	intro-cooking-math-4.wav space-44s.wav ../Release/os
 	-rm normalize-space-result.ppm
 
 dynamic-noise.wav:	dynamic-test.wav ../Release/ospac
-	ospac --raw dynamic-test.wav --plot dynamic-test.ppm
+	../Release/ospac --raw dynamic-test.wav --plot dynamic-test.ppm
 	-pnmscale .5 < dynamic-test.ppm|pnmtopng > dynamic-test.png && mv dynamic-test.png ../images
-	ospac --raw --noise dynamic-test.wav --output dynamic-noise.wav --plot dynamic-noise.ppm
+	../Release/ospac --raw --noise dynamic-test.wav --output dynamic-noise.wav --plot dynamic-noise.ppm
 	-pnmscale .5 < dynamic-noise.ppm|pnmtopng > dynamic-noise.png && mv dynamic-noise.png ../images
 	
 	
 dynamic-noise-normalized.wav:	dynamic-test.wav ../Release/ospac
-	ospac --raw --noise dynamic-test.wav --normalize --output dynamic-noise-normalized.wav --plot dynamic-noise-normalized.ppm
+	../Release/ospac --raw --noise dynamic-test.wav --normalize --output dynamic-noise-normalized.wav --plot dynamic-noise-normalized.ppm
 	-pnmscale .5 < dynamic-noise-normalized.ppm|pnmtopng > dynamic-noise-normalized.png && mv dynamic-noise-normalized.png ../images
 
 
