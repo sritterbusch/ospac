@@ -317,6 +317,7 @@ void OspacMain::setStandard()
 	skip=stdSkip[argMode];
 	trim=false;
 	skipSilence=stdSkipSilence[argMode];
+	skipTarget=0;
 	voiceEq=stdVoiceEq[argMode];
 
 	transitionMode=nextTransitionMode;
@@ -354,6 +355,7 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "leveler","no-leveler","target","level-mode",
 							  "normalize","no-normalize",
 							  "skip","no-skip","skip-level","skip-order",
+							  "skip-target",
 							  "noise", "trim",
 							  "xgate","no-xgate",
 							  "xfilter","no-xfilter",
@@ -432,6 +434,7 @@ int OspacMain::run(void)
 				std::cout << std::endl;
 				std::cout << " Adaptive silence skip:" << std::endl;
 				std::cout << "  --skip          Soft skip silent passages over 0.5s length" << std::endl;
+				std::cout << "  --skip-target   Target length fraction for iteration"<< std::endl;
 				std::cout << "  --skip-level    Fraction of maximum level considered silence (0.01)" << std::endl;
 				std::cout << "  --skip-order    Order of reduction (0-1, default: 0.75)" << std::endl;
 				std::cout << "  --no-skip       Do not skip any content" << std::endl;
@@ -726,6 +729,16 @@ int OspacMain::run(void)
 			{
 				target=Channels();
 				skip=false;
+			} else
+			if(arg[i]=="skip-target")
+			{
+				target=Channels();
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					skipTarget=atof(arg[i].c_str());
+				}
 			} else
 			if(arg[i]=="skip-level")
 			{
@@ -1181,8 +1194,15 @@ void OspacMain::render(Channels & work,Channels & operand,Channels & target)
 	}
 	if(skip)
 	{
-		LOG(logDEBUG) << "Skip with parameter "<< skipSilence << std::endl;
-		Skip::silence(work,skipSilence,0.5,0.05,skipOrder);
+		if(skipTarget==0)
+		{
+			LOG(logDEBUG) << "Skip with parameter "<< skipSilence << std::endl;
+			Skip::silence(work,skipSilence,0.5,0.05,skipOrder);
+		} else
+		{
+			LOG(logDEBUG) << "Skip with parameter "<< skipSilence << std::endl;
+			Skip::silenceTarget(work,skipTarget,skipSilence,0.5,0.05,skipOrder);
+		}
 		skip=false;
 	}
 	if(noise)

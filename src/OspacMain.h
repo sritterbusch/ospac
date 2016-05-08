@@ -150,6 +150,11 @@ protected:
 	float   skipOrder;
 
 	/**
+	 * Skip target length (0 for disabled, 0<x<1 for target fraction length)
+	 */
+	float   skipTarget;
+
+	/**
 	 * Should voice equalizer run over the channels?
 	 */
 	bool	voiceEq;

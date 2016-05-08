@@ -37,6 +37,23 @@ public:
 	static float silence(Channels &channels,float silenceLevel=0.01,float minsec=0.5,float mintransition=0.05,float reductionOrder=0.75);
 
 	/**
+	 * Skip silence in channels to decrease length to the fraction given,
+	 * if absolute sum of voltages are below
+	 * silence level fraction compared to maximum level for longer than
+	 * minsec seconds. Shorten the period by the time to the reduction order.
+	 * The transition period is in the middle of silence for a maximum time
+	 * of maxtransition seconds.
+	 * @param channels Channels where silence is to be skipped
+	 * @param targetFraction target length fraction
+	 * @param silenceLevel start fraction compared to maximum what is considered silence
+	 * @param minsec start minimum time of silence before skipping is considered
+	 * @param mintransition start minimum time of transition
+	 * @param reductionOrder reduction by time to the reduction order
+	 * @return total seconds that were skipped
+	 */
+	static float silenceTarget(Channels &channels,float targetFraction,float silenceLevel=0.01,float minsec=0.5,float mintransition=0.05,float reductionOrder=0.75);
+
+	/**
 	 * Trim silence in channels if absolute sum of voltages are below
 	 * silence level fraction compared to maximum level only at the beginning
 	 * or the end.

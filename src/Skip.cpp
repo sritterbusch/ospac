@@ -140,6 +140,64 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 	return skipped;
 }
 
+float Skip::silenceTarget(Channels &a,float targetFraction,float silenceLevel,float minsec,float mintransition,float reductionOrder)
+{
+	unsigned samplerate=0,len=0;
+	if(targetFraction>=1)
+		return 0;
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()>samplerate)
+			samplerate=a[c].samplerate();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].samplerate()<samplerate)
+			a[c]=a[c].resampleTo(samplerate);
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()>len)
+			len=a[c].size();
+
+	for(unsigned c=0;c<a.size();c++)
+		if(a[c].size()<len)
+			a[c]=a[c].resizeTo(len);
+
+	float size=float(len)/samplerate;
+	float targetCut=size*(1-targetFraction);
+
+	float step=0.5;
+	float state=1;
+	Channels work;
+	float cut;
+	int   iteration=0;
+	float cSilenceLevel,cMinsec,cMintransition,cReductionOrder;
+
+	do {
+		work=a;
+		cSilenceLevel=pow(state,0.6)*silenceLevel;
+		cMinsec=minsec/state;
+		cMintransition=mintransition/state;
+		cReductionOrder=(reductionOrder*3+1*state)/(state+3);
+		iteration++;
+		LOG(logINFO) << "Target skip search "<<iteration<<": State " << state << " Level " << cSilenceLevel << " Minsec "<< cMinsec << " Mintransition " << cMintransition << " ReductionOrder " << cReductionOrder << std::endl;
+		cut=Skip::silence(work,cSilenceLevel,cMinsec,cMintransition,cReductionOrder);
+		LOG(logINFO) << "At "<<state <<" Want: " << targetCut << "  Achieved: " << cut << std::endl;
+
+		if(cut<targetCut)
+		{
+			state+=step;
+			//step/=2;
+		} else
+		{
+			state-=step;
+			step/=2;
+		}
+	} while (fabs(cut-targetCut)>0.01 && iteration<100);
+	a=work;
+	return cut;
+}
+
+
 float Skip::trim(Channels &a,float level)
 {
 	if(a.size()==0)
