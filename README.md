@@ -37,6 +37,14 @@ When enabled, ospac may reduce silence above 0.5s to shorter pauses:
 
 ![Result of soft silence skipping](https://github.com/sritterbusch/ospac/raw/master/images/skip-result.png)
 
+Alternatively, ospac can try to reach target lengths (90%, 80%, 70%, 60%,
+and 50%) compared to the original:
+
+![Result of target silence skipping](https://github.com/sritterbusch/ospac/raw/master/images/skip-target.png)
+
+Of course, the result will only be really acceptible until all silence space is
+used up.
+
 ## Examples
 
 Mix 2 mono voice recordings with crosstalk filter, leveling and normalization:
