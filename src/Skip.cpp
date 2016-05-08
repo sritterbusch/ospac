@@ -24,28 +24,11 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 
 
 	unsigned skip=0;
-	unsigned len=0;
-	unsigned samplerate=0;
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()>samplerate)
-			samplerate=a[c].samplerate();
-
+	unsigned len=unifiedLength(a);
+	unsigned samplerate=unifiedSamplerate(a);
 
 	mintransition*=samplerate;
 	unsigned mintransition_u=(int)mintransition;
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()<samplerate)
-			a[c]=a[c].resampleTo(samplerate);
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()>len)
-			len=a[c].size();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()<len)
-			a[c]=a[c].resizeTo(len);
 
 	float max=0;
 
@@ -103,7 +86,8 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 
 			int padding=(d-ndelta-transition)/2;
 
-			LOG(logDEBUG) << "Transition: " << transition << " padding: "<<padding<< std::endl;
+			LOG(logDEBUG) << "Transition: " << transition
+					      << " padding: " << padding << std::endl;
 
 			for(unsigned j=0;(int)j<padding;j++,i++,d--)
 				for(unsigned c=0;c<a.size();c++)
@@ -142,25 +126,10 @@ float Skip::silence(Channels & a,float level,float minsec,float mintransition,fl
 
 float Skip::silenceTarget(Channels &a,float targetFraction,float silenceLevel,float minsec,float mintransition,float reductionOrder)
 {
-	unsigned samplerate=0,len=0;
 	if(targetFraction>=1)
 		return 0;
 
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()>samplerate)
-			samplerate=a[c].samplerate();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()<samplerate)
-			a[c]=a[c].resampleTo(samplerate);
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()>len)
-			len=a[c].size();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()<len)
-			a[c]=a[c].resizeTo(len);
+	unsigned samplerate=unifiedSamplerate(a),len=unifiedLength(a);
 
 	float size=float(len)/samplerate;
 	float targetCut=size*(1-targetFraction);
@@ -203,24 +172,8 @@ float Skip::trim(Channels &a,float level)
 	if(a.size()==0)
 		return 0;
 
-	unsigned len=0;
-	unsigned samplerate=0;
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()>samplerate)
-			samplerate=a[c].samplerate();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()<samplerate)
-			a[c]=a[c].resampleTo(samplerate);
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()>len)
-			len=a[c].size();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()<len)
-			a[c]=a[c].resizeTo(len);
+	unsigned len=unifiedLength(a);
+	unsigned samplerate=unifiedSamplerate(a);
 
 	float max=0;
 
@@ -281,12 +234,8 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 		return 0;
 
 	unsigned skip=0;
-	unsigned len=0;
-	unsigned samplerate=0;
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()>samplerate)
-			samplerate=a[c].samplerate();
+	unsigned len=unifiedLength(a);
+	unsigned samplerate=unifiedSamplerate(a);
 
 	if(transition>minsec/2)
 		transition=minsec/2;
@@ -296,18 +245,6 @@ float Skip::noise(Channels &a,float level,float minsec,float transition)
 
 	transition*=samplerate;
 	unsigned transition_u=(unsigned)transition;
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].samplerate()<samplerate)
-			a[c]=a[c].resampleTo(samplerate);
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()>len)
-			len=a[c].size();
-
-	for(unsigned c=0;c<a.size();c++)
-		if(a[c].size()<len)
-			a[c]=a[c].resizeTo(len);
 
 	float max=0;
 
