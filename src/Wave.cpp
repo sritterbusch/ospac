@@ -204,7 +204,21 @@ int Wave::save(const std::string &name,Channels & channels)
 	info.samplerate=channels[0].samplerate();
 	int frames=info.frames=channels[0].size();
 
-	LOG(logINFO) << "Writing " << name << " with "<< info.channels << " channels in " << info.samplerate << "Hz and " << info.frames << "frames " << std::endl;
+	char lengthString[40];
+
+	float secs=frames/float(info.samplerate);
+	int   mins=secs/60;
+	secs-=mins*60;
+	int   hours=mins/60;
+	mins-=hours*60;
+
+	if(hours>0)
+		sprintf(lengthString,"%d:%02d:%05.2f",hours,mins,secs);
+	else
+		sprintf(lengthString,"%d:%05.2f",mins,secs);
+
+	LOG(logINFO) << "Writing " << name << " with "<< info.channels << " channels in " << info.samplerate << "Hz and " << info.frames << "frames" << std::endl;
+	LOG(logINFO) << "Final length: " <<lengthString << std::endl;
 
 	for(unsigned i=0;i<channels.size();i++)
 	{
