@@ -85,6 +85,16 @@ version:
 
 	$ make ospac-gui-linux && sudo make install-gui
 
+To simplify usage tab-completion files for bash and zsh can be generated:
+
+	$ make tab-completion
+
+The tab-completion is then usable by appending the following to your
+`.[bash|zsh]rc` file:
+	
+	source PATH_TO_OSPAC/[zsh|bash]_completion.sh
+
+
 ## API Reference
 
 See the doxygen docs 
