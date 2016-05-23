@@ -20,6 +20,10 @@ GUI-Release/ospac-gui-linux:	src/*cpp src/*h
 Release/ospac:	src/*cpp src/*h
 	cd Release;make all;cd ..
 
+tab-completion: create_tab_completion.py
+	python3 create_tab_completion.py zsh zsh_completion.sh
+	python3 create_tab_completion.py bash bash_completion.sh
+
 test:	Release/ospac
 	cd test;make all;cd ..
 	
@@ -45,5 +49,4 @@ clean:
 	cd test;make clean;cd ..
 	rm -f *~
 	rm -f src/*~
-
-	
+	rm zsh_completion.sh bash_completion.sh
