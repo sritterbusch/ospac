@@ -3,6 +3,7 @@
 # By Johannes Bechberger, under MIT License
 
 import sys
+import os
 
 description = "description"   # hacks that allow better editing in IDEs
 zsh = "zsh"
@@ -103,7 +104,8 @@ completion = {
         },
         "--image": {
             description: "Set the image tag if this exists in the output",
-            flag: False
+            flag: False,
+            zsh: "_files"
         }
     },
     "New segment selection": {
@@ -257,6 +259,11 @@ def zsh_completion() -> str:
         if item[zsh]:
             if isinstance(item[zsh], list):
                 ret += "(" + " ".join(repr(x) for x in item[zsh]) + ")"
+            elif isinstance(item[zsh], str):
+                ret += item[zsh]
+            else:
+                print("Error on zsh completion in " + repr(item), file=sys.stderr)
+                os.error(1)
         return repr(ret)
     return """
 
