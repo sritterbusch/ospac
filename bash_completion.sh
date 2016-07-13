@@ -5,62 +5,62 @@
 _ospac(){
   local opts
   opts=(
-  --image
-  --artist
-  --category
-  --episode
-  --year
-  --album
-  --comment
-  --title
   --mix
-  --voice
   --raw
-  --verbosity
-  --help
-  --xgate
-  --no-xfilter
-  --no-xgate
-  --xfilter
-  --mono
-  --spatial
-  --set-stereo-spatial
-  --stereo
-  --multi
-  --set-stereo-level
-  --output
-  --ogg
-  --plot
-  --quality
-  --mp3
-  --low-pass
-  --level-mode
-  --factor
-  --no-leveler
-  --no-factor
-  --analyze
-  --no-eqvoice
-  --target
-  --highpass
-  --leveler
-  --normalize
-  --band-pass
-  --eqvoice
-  --no-normalize
-  --left
-  --to-mono
-  --right
-  --ascii
+  --voice
   --overlap
   --fade
   --parallel
+  --year
+  --comment
+  --image
+  --album
+  --title
+  --episode
+  --category
+  --artist
+  --skip-order
   --skip-target
   --skip-level
   --no-skip
-  --noise
   --soft
+  --noise
   --trim
-  --skip-order
+  --help
+  --verbosity
+  --normalize
+  --no-eqvoice
+  --eqvoice
+  --level-mode
+  --leveler
+  --no-factor
+  --analyze
+  --low-pass
+  --band-pass
+  --no-leveler
+  --highpass
+  --no-normalize
+  --factor
+  --target
+  --set-stereo-level
+  --spatial
+  --stereo
+  --multi
+  --mono
+  --set-stereo-spatial
+  --xfilter
+  --no-xfilter
+  --xgate
+  --no-xgate
+  --ascii
+  --left
+  --to-mono
+  --right
+  --output
+  --mp3
+  --quality
+  --plot
+  --ogg
   )
   local cur=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=( $(compgen -W "${opts[*]}" -- $cur) )
