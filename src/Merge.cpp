@@ -83,8 +83,15 @@ Channels Merge::parallel(Channels &a, Channels &b)
 	unifySamplerate(a,b);
 	Channels target(a);
 	for(unsigned i=0;i<a.size();i++)
-		for(unsigned j=0;j<a[i].size();j++)
-			target[i][j]=a[i][j]+b[i][j];
+	{
+		unsigned offset=0;
+		if(a[i].size()>b[i].size())
+			offset=a[i].size()-b[i].size();
+		for(unsigned j=0;j<offset;j++)
+			target[i][j]=a[i][j];
+		for(unsigned j=offset;j<a[i].size();j++)
+			target[i][j]=a[i][j]+b[i][j-offset];
+	}
 
 	return target;
 }
