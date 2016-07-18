@@ -44,7 +44,12 @@ void CrosstalkGate::gate(Channels &channels,unsigned downsampleLevel,double wind
 
 
 		double sum=0;
-
+		
+		for(unsigned j=0;j<workWindow;j++)
+		{
+			sum+=downsample[i][j];
+		}
+		
 		for(unsigned j=0;j<downsample[i].size();j++)
 		{
 			sum+=downsample[i][j+workWindow]-downsample[i][j-workWindow];
