@@ -13,6 +13,7 @@
 #include <string>
 
 #include "Channel.h"
+#include "Wave.h" // Nur fuer FFMPEG-Define und saveAac(...)
 
 /**
  * @brief 		Encoding to various formats using external tools
@@ -36,6 +37,7 @@ private:
 	std::string year;
 	std::string image;
 	QualitySetting     quality;
+	int                aacBitrate;
 
 public:
 	/**
@@ -48,7 +50,8 @@ public:
 		  comment("Encoded by ospac.net"),
 		  category("Speech"),episode(""),
 		  year(""),image(""),
-		  quality(STANDARD)
+		  quality(STANDARD),
+		  aacBitrate(64000)
 	{
 
 	}
@@ -107,7 +110,16 @@ public:
 	 * @return modified builder object
 	 */
 	Encode & Quality(QualitySetting aQuality) { quality=aQuality; return *this; }
-
+	#ifdef HAS_FFMPEG
+	
+	/**
+	 * set aac bitrate to given value
+	 * @param aBitrate bitrate value to be used
+	 * @return modified builder object
+	 */
+	Encode & Bitrate(int aBitrate) { aacBitrate=aBitrate; return *this; }
+	#endif
+	
 	/**
 	 * Create mp3 file from builder
 	 * @param filename under which the encoded file shall be saved
@@ -131,6 +143,18 @@ public:
 					  category,episode);
 
 	}
+	
+	#ifdef HAS_FFMPEG
+	/**
+	 * Create aac file from builder
+	 * @param filename under which the encoded file shall be saved
+	 * @return return value of command
+	 */
+	int    aac(std::string filename)
+	{
+		return Wave::saveAac(filename,channels,aacBitrate);
+	}
+	#endif
 
 protected:
 
