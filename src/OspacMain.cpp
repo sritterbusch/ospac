@@ -340,6 +340,10 @@ void OspacMain::setStandard()
 
 	noise=false;
 
+#ifdef HAS_FFMPEG
+	aacBitrate=64000;
+#endif
+
 }
 
 OspacMain::~OspacMain()
@@ -366,7 +370,11 @@ std::string OspacMain::options[]={"spatial","stereo","mono","multi",
 							  "title","artist","album",
 							  "comment","category","episode",
 							  "year","image","quality",
-							  "help","verbosity","plot"};
+							  "help","verbosity","plot"
+#ifdef HAS_FFMPEG
+							  ,"aac","bitrate"
+#endif
+							  };
 
 int OspacMain::run(void)
 {
@@ -385,6 +393,9 @@ int OspacMain::run(void)
 				std::cout << "---------------------------------------" << std::endl;
 				std::cout << std::endl;
 				std::cout << "Distributed under the MIT License." << std::endl;
+				#ifdef HAS_FFMPEG
+				std::cout << "This software uses libraries from the FFmpeg project under the LGPLv2.1" << std::endl;
+				#endif
 				std::cout << std::endl;
 				std::cout << " Information:" << std::endl;
 				std::cout << "  --help          This information" << std::endl;
@@ -405,6 +416,10 @@ int OspacMain::run(void)
 				std::cout << "  --mp3 [file]    Write final output to [file] using external lame" << std::endl;
 				std::cout << "  --ogg [file]    Write final output to [file] using external oggenc" << std::endl;
 				std::cout << "  --quality [n]   Quality from 0-low, 1-standard, 2-high, 3-insane" << std::endl;
+				#ifdef HAS_FFMPEG
+				std::cout << "  --aac [file]    Write final output to [file] in aac format" << std::endl;
+				std::cout << "  --bitrate [n]   Bitrate to use for aac output in kbit/s (default:64)"<<std::endl;
+				#endif
 				std::cout << std::endl;
 				std::cout << " Output meta data:" << std::endl;
 				std::cout << "  --title [text]  Set title tag to [text] if this exists in output" << std::endl;
@@ -947,7 +962,37 @@ int OspacMain::run(void)
 						break;
 					}
 				}
-			}else
+			} else
+			#ifdef HAS_FFMPEG
+			if(arg[i]=="aac")
+			{
+				if(target.size()==0)
+					render(work,operand,target);
+
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+
+					int result=Encode(target)
+									.Bitrate(aacBitrate)
+									.aac(arg[i]);
+					if(result)
+					{
+						LOG(logDEBUG) << "Encoding failed with error code " << result;
+					}
+				}
+			} else
+			if(arg[i]=="bitrate")
+			{
+				if(i+1<arg.size())
+				{
+					i++;
+					LOG(logDEBUG) << "Value: " << arg[i] << std::endl;
+					aacBitrate=atoi(arg[i].c_str())*1000;
+				}
+			} else
+			#endif
 			if(arg[i]=="title")
 			{
 				if(i+1<arg.size())
@@ -1104,7 +1149,11 @@ int OspacMain::run(void)
 		{
 			target=Channels();
 			unsigned before=work.size();
+			#ifdef HAS_FFMPEG
+			Wave::loadFfmpeg(arg[i],work);
+			#else
 			Wave::load(arg[i],work,loadSkipSeconds,loadMaxSeconds);
+			#endif
 			if(work.size()==before)
 			{
 				LOG(logERROR) << "Could not load " << arg[i] << std::endl;

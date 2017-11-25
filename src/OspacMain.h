@@ -323,6 +323,13 @@ protected:
 	 */
 	SelectiveLeveler::ChannelMode stdLevelChannelMode[MaxArgMode];
 
+#ifdef HAS_FFMPEG
+    /**
+     * Bitrate setting for aac encoding
+     */
+    int aacBitrate;
+#endif
+
 public:
 	/**
 	 * Set up data and prepare everything for the run method.
