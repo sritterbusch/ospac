@@ -70,6 +70,11 @@ Then, you may build and install ospac in this way:
 
 	$ make ospac && sudo make install
 
+If you have ffmpeg and libav on your system, you may also build ospac with
+support for loading of various audio formats and writing aac files:
+
+	$ make ospac-ffmpeg && sudo make install-ospac-ffmpeg
+
 On MacOS you can install libsndfile using homebrew simply by:
 
 	$ brew install libsndfile
