@@ -37,7 +37,9 @@ private:
 	std::string year;
 	std::string image;
 	QualitySetting     quality;
+	#ifdef HAS_FFMPEG
 	int                aacBitrate;
+	#endif
 
 public:
 	/**
@@ -50,8 +52,10 @@ public:
 		  comment("Encoded by ospac.net"),
 		  category("Speech"),episode(""),
 		  year(""),image(""),
-		  quality(STANDARD),
-		  aacBitrate(64000)
+		  quality(STANDARD)
+#ifdef HAS_FFMPEG
+		  ,aacBitrate(64000)
+#endif	
 	{
 
 	}
